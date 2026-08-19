@@ -1,8 +1,6 @@
+package com.github.wechat.ilink.sdk.bot;
+
 import com.github.wechat.ilink.sdk.ILinkClient;
-import com.github.wechat.ilink.sdk.bot.AiClient;
-import com.github.wechat.ilink.sdk.bot.AudioConverter;
-import com.github.wechat.ilink.sdk.bot.DashScopeClient;
-import com.github.wechat.ilink.sdk.bot.WeatherClient;
 import com.github.wechat.ilink.sdk.core.config.ILinkConfig;
 import com.github.wechat.ilink.sdk.core.listener.OnLoginListener;
 import com.github.wechat.ilink.sdk.core.listener.OnMessageListener;
@@ -35,7 +33,7 @@ public class BotMain {
     private final AiClient visionClient;
     private final DashScopeClient dashScopeClient;
     private final AudioConverter audioConverter;
-    private final WeatherClient weatherClient;
+    private final Weather weather;
     private final String systemPrompt;
     private final int maxHistoryTurns;
     private final String replyPrefix;
@@ -43,7 +41,6 @@ public class BotMain {
     private final String unsupportedReply;
     private final boolean imageReplyEnabled;
     private final boolean voiceReplyEnabled;
-    private final String defaultCity;
 
     private final Map<String, List<Map<String, String>>> chatHistories = new ConcurrentHashMap<>();
     private final ExecutorService replyExecutor = Executors.newFixedThreadPool(4, r -> {
@@ -55,14 +52,6 @@ public class BotMain {
     private static final Pattern DRAW_PATTERN = Pattern.compile(
             "(画|绘制|生成|做|创作|设计).{0,20}(图|图片|照片|壁纸|海报|插画|头像)"
                     + "|(图|图片|照片|壁纸|海报|插画|头像).{0,20}(画|绘制|生成|做|创作|设计)");
-
-    /** 天气意图：消息里包含"天气/气温/冷不冷/热不热/下雨"等关键词 */
-    private static final Pattern WEATHER_PATTERN = Pattern.compile(
-            "天气|气温|温度|冷不冷|热不热|下雨|会不会下雪|台风|空气");
-    /** 提取城市：匹配"北京天气" / "天气北京" / "北京的天气" 等 */
-    private static final Pattern CITY_PATTERN = Pattern.compile(
-            "([\\u4e00-\\u9fa5]{2,6}?)(?:市)?(?:今天|明天|后天|现在|的)?天气"
-                    + "|(?:今天|明天|后天|现在|的)?天气(.{1,6}?)[，。！？!?\\s]?$");
 
     private volatile ILinkClient client;
     private volatile boolean running = true;
@@ -95,8 +84,7 @@ public class BotMain {
         this.unsupportedReply = resolve(props, "bot.unsupported-reply", "暂只支持文本消息");
         this.imageReplyEnabled = Boolean.parseBoolean(resolve(props, "bot.image-reply", "true"));
         this.voiceReplyEnabled = Boolean.parseBoolean(resolve(props, "bot.voice-reply", "true"));
-        this.defaultCity = resolve(props, "bot.default-city", "深圳");
-        this.weatherClient = new WeatherClient();
+        this.weather = new Weather(resolve(props, "bot.default-city", "深圳"));
 
         // ===== 启动时检查 FFmpeg =====
         checkFFmpeg();
@@ -232,18 +220,11 @@ public class BotMain {
                     if (reply != null) return;
                 }
 
-                // ===== 天气意图：查 wttr.in =====
-                if (WEATHER_PATTERN.matcher(text).find()) {
-                    System.out.println("检测到天气查询指令：" + truncate(text, 40));
-                    String city = extractCity(text);
-                    try {
-                        String weatherText = weatherClient.queryWeather(city);
-                        System.out.println("天气查询成功：" + city + " → " + truncate(weatherText, 60));
-                        sendTextReply(fromUserId, weatherText, contextToken);
-                    } catch (Exception wex) {
-                        System.err.println("天气查询失败：" + wex.getMessage());
-                        sendTextReply(fromUserId, "抱歉，天气查询失败：" + wex.getMessage(), contextToken);
-                    }
+                // ===== 天气查询：交给 Weather 类一站式处理 =====
+                String weatherText = weather.tryHandle(text);
+                if (weatherText != null) {
+                    System.out.println("天气查询成功：" + truncate(weatherText, 60));
+                    sendTextReply(fromUserId, weatherText, contextToken);
                     return;
                 }
 
@@ -255,24 +236,6 @@ public class BotMain {
                 sendTextQuietly(fromUserId, errorReply, contextToken);
             }
         });
-    }
-
-    /** 从消息文本中提取城市名；提取不到时返回默认城市 */
-    private String extractCity(String text) {
-        java.util.regex.Matcher m = CITY_PATTERN.matcher(text);
-        if (m.find()) {
-            String c = m.group(1);
-            if (c == null || c.isEmpty()) c = m.group(2);
-            if (c != null && !c.trim().isEmpty()) {
-                String city = c.trim();
-                // 去掉常见干扰词
-                city = city.replaceAll("[的了吗呢请问帮我看一下查查]", "").trim();
-                if (!city.isEmpty() && city.length() <= 6) {
-                    return city;
-                }
-            }
-        }
-        return defaultCity;
     }
 
     /** ✅ 修复：图片消息增加 contextToken */
@@ -319,21 +282,13 @@ public class BotMain {
                 }
                 System.out.println("语音已转文字：" + truncate(voiceText, 80));
 
-                // ===== 天气意图：语音问天气也要走真实数据（Open-Meteo），
-                //      不能交给大模型编（大模型会幻觉出错误温度）=====
-                if (WEATHER_PATTERN.matcher(voiceText).find()) {
-                    System.out.println("语音检测到天气查询指令：" + truncate(voiceText, 40));
-                    String city = extractCity(voiceText);
-                    try {
-                        String weatherText = weatherClient.queryWeather(city);
-                        System.out.println("语音天气查询成功：" + city + " → " + truncate(weatherText, 60));
-                        // 语音回复：TTS 朗读真实天气；TTS 失败则回退文字
-                        if (!tryVoiceReply(fromUserId, weatherText, contextToken)) {
-                            sendTextReply(fromUserId, weatherText, contextToken);
-                        }
-                    } catch (Exception wex) {
-                        System.err.println("语音天气查询失败：" + wex.getMessage());
-                        sendTextReply(fromUserId, "抱歉，天气查询失败：" + wex.getMessage(), contextToken);
+                // ===== 天气意图：语音问天气也走真实数据（Open-Meteo），
+                //      交给 Weather.tryHandle 一站式处理，避免大模型幻觉 =====
+                String weatherText = weather.tryHandle(voiceText);
+                if (weatherText != null) {
+                    System.out.println("语音天气查询成功：" + truncate(weatherText, 60));
+                    if (!tryVoiceReply(fromUserId, weatherText, contextToken)) {
+                        sendTextReply(fromUserId, weatherText, contextToken);
                     }
                     return;
                 }
@@ -510,8 +465,8 @@ public class BotMain {
         if (dashScopeClient != null) {
             try { dashScopeClient.close(); } catch (Exception ignore) {}
         }
-        if (weatherClient != null) {
-            try { weatherClient.close(); } catch (Exception ignore) {}
+        if (weather != null) {
+            try { weather.close(); } catch (Exception ignore) {}
         }
         replyExecutor.shutdownNow();
     }

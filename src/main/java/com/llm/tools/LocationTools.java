@@ -119,7 +119,7 @@ public class LocationTools {
 
     @Tool(description = "从用户保存的当前位置出发，规划到指定目的地的步行或驾车路线")
     public String planRouteFromCurrentLocation(
-            @ToolParam(description = "目的地，例如：杭州东站、西湖断桥")
+            @ToolParam(description = "目的地，例如：南京南站、梧桐大道")
             String destination,
             @ToolParam(
                     description = "出行方式：walking表示步行，driving表示驾车；用户未指定时传walking",
@@ -128,9 +128,22 @@ public class LocationTools {
             String mode
     ) {
         try {
+            String userId = currentUserId();
+
+            // 获取用户当前保存的位置信息，提取其中的城市（如“南通市”），防止同名异地
+            UserLocation currentLocation = userLocationService.getCurrentLocation(userId);
+            String currentCity = currentLocation != null ? currentLocation.city() : null;
+
+            // 若目的地中未包含当前城市名，则自动补齐城市前缀以限定高德检索范围
+            String searchDestination = destination;
+            if (currentCity != null && !currentCity.isBlank() && !destination.contains(currentCity)) {
+                searchDestination = currentCity + destination;
+                log.info("[LocationTools] 检测到目的地未包含当前城市，自动优化搜索词: {} -> {}", destination, searchDestination);
+            }
+
             RouteResult route = userLocationService.planRoute(
-                    currentUserId(),
-                    destination,
+                    userId,
+                    searchDestination,
                     mode
             );
             String modeText = "driving".equals(route.mode())

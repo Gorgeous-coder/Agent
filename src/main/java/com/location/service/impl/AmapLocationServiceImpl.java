@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import com.location.dto.GeocodeResult;
+import com.location.dto.LocationResult;
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
 import com.location.service.AmapLocationService;
@@ -45,7 +45,7 @@ public class AmapLocationServiceImpl
     private String apiKey;
 
     @Override
-    public GeocodeResult geocode(String address) {
+    public LocationResult geocode(String address) {
         if (address == null || address.isBlank()) {
             throw new RuntimeException("地址不能为空");
         }
@@ -106,7 +106,7 @@ public class AmapLocationServiceImpl
                 city = province;
             }
 
-            GeocodeResult result = new GeocodeResult(
+            LocationResult result = new LocationResult(
                     formattedAddress,
                     province,
                     city,

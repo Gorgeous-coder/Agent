@@ -11,6 +11,9 @@ import java.util.Optional;
 
 /**
  * 内存位置存储，带 LRU 容量上限。
+ *
+ * <p>每用户一条位置记录，但长期运行、用户持续增加时无界 map 会持续膨胀。
+ * 超过 {@link #MAX_ENTRIES} 时按访问顺序逐出最久未用的条目。</p>
  */
 @Repository
 public class MemoryUserLocationRepository implements UserLocationRepository {
@@ -29,11 +32,12 @@ public class MemoryUserLocationRepository implements UserLocationRepository {
     @Override
     public void save(UserLocation location) {
         if (location == null) {
-            throw new RuntimeException("位置不能为空");
+            throw new IllegalArgumentException("位置不能为空");
         }
 
-        if (location.userId() == null || location.userId().isBlank()) {
-            throw new RuntimeException("用户ID不能为空");
+        if (location.userId() == null
+                || location.userId().isBlank()) {
+            throw new IllegalArgumentException("用户ID不能为空");
         }
 
         locations.put(location.userId(), location);

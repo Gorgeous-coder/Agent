@@ -89,7 +89,7 @@ public class MessageProcessor {
             try {
                 String reply;
                 if (!imageBytesList.isEmpty()) {
-                    byte[] imageBytes = imageBytesList.get(0);
+                    byte[] imageBytes = imageBytesList.getFirst();
                     String prompt = (finalText != null && !finalText.isBlank()) ? finalText : "请详细描述这张图片";
 
                     log.info("[Processor] 触发图片直连分析: userId={}, prompt={}", fromUserId, prompt);

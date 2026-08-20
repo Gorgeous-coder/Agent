@@ -2,7 +2,7 @@ package com.location.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.location.dto.GeocodeResult;
+import com.location.dto.LocationResult;
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
 import com.location.model.UserLocation;
@@ -25,7 +25,7 @@ public class UserLocationServiceImpl implements UserLocationService {
     @Override
     public UserLocation setCurrentLocation(String userId, String address) {
         requireUserId(userId);
-        GeocodeResult geocode = amapLocationService.geocode(address);
+        LocationResult geocode = amapLocationService.geocode(address);
         UserLocation location = new UserLocation(
                 userId,
                 geocode.formattedAddress(),
@@ -42,7 +42,7 @@ public class UserLocationServiceImpl implements UserLocationService {
     public UserLocation getCurrentLocation(String userId) {
         requireUserId(userId);
         return userLocationRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("请先告诉我您的位置，例如：我现在在杭州西湖区"));
+                .orElseThrow(() -> new RuntimeException("请先告诉我您的位置，例如：我现在在北京海淀区"));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class UserLocationServiceImpl implements UserLocationService {
             String mode
     ) {
         UserLocation origin = getCurrentLocation(userId);
-        GeocodeResult destinationPoint = amapLocationService.geocode(destination);
+        LocationResult destinationPoint = amapLocationService.geocode(destination);
         return amapLocationService.planRoute(
                 origin.longitude(),
                 origin.latitude(),

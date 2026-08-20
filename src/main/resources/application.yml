@@ -17,3 +17,7 @@ spring:
 # 高德地图配置
 gaode:
   key: ${GAODE_KEY}
+
+tencent:
+  map:
+    key: ${TENCENT_KEY}

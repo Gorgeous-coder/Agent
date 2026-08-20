@@ -1,6 +1,6 @@
 package com.location.service;
 
-import com.location.dto.GeocodeResult;
+import com.location.dto.LocationResult;
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
 
@@ -10,10 +10,10 @@ public interface AmapLocationService {
     /**
      * 将文字地址转换成经纬度和城市信息。
      *
-     * @param address 地址，例如“杭州西湖区”
+     * @param address 地址，例如“北京海淀区”
      * @return 高德解析结果
      */
-    GeocodeResult geocode(String address);
+    LocationResult geocode(String address);
 
     /**
      * 按经纬度搜索附近地点。

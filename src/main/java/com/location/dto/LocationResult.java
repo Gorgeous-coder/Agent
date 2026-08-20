@@ -1,9 +1,9 @@
 package com.location.dto;
 
 /**
- * 高德地理编码
+ * 地理编码
  */
-public record GeocodeResult(
+public record LocationResult(
         String formattedAddress,
         String province,
         String city,

@@ -1,10 +1,17 @@
 package com.group26.Agent.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.wechat.ilink.sdk.ILinkClient;
 import com.github.wechat.ilink.sdk.ILinkClientBuilder;
 import com.github.wechat.ilink.sdk.core.model.*;
+import com.group26.Agent.service.tools.GenerateImageTool;
+import com.group26.Agent.service.tools.GetCurrentTimeTool;
+import com.group26.Agent.service.tools.Tool;
+import com.group26.Agent.service.tools.ToolRegistry;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +23,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +42,10 @@ public class WeChatBotService {
     @Autowired
     private WeatherService weatherService;
 
+    @Autowired
+    private ToolRegistry toolRegistry;
+
+    private static final String DEEPSEEK_API_KEY = System.getenv("DEEPSEEK_API_KEY");
     private static final String API_KEY = "sk-dcbdzibgmqcfarorzdffjjlhrnopblnokshkyqzgakupjonw";
 
     // ==================== SiliconFlow 文本对话 ====================
@@ -351,7 +365,9 @@ public class WeChatBotService {
                     Thread.sleep(2000);
                 }
                 System.out.println("✅ 登录成功！");
-
+                toolRegistry.register(new GetCurrentTimeTool());
+                toolRegistry.register(new GenerateImageTool());
+                System.out.println("✅ 工具注册完成");
                 System.out.println("📨 开始接收消息...");
                 while (running) {
                     try {
@@ -379,6 +395,158 @@ public class WeChatBotService {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    // ==================== 构建工具列表 JSON ====================
+    private String buildToolsJson() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode toolsArray = mapper.createArrayNode();
+
+        // 获取所有工具
+        Map<String, Tool> toolMap = toolRegistry.getToolMap();
+
+        for (Tool tool : toolMap.values()) {
+            ObjectNode toolNode = mapper.createObjectNode();
+            toolNode.put("type", "function");
+
+            ObjectNode functionNode = mapper.createObjectNode();
+            functionNode.put("name", tool.name());
+            functionNode.put("description", tool.description());
+            functionNode.set("parameters", tool.getParametersSchema());
+
+            toolNode.set("function", functionNode);
+            toolsArray.add(toolNode);
+        }
+
+        return mapper.writeValueAsString(toolsArray);
+    }
+
+    public String callSiliconFlowWithTools(String userMessage) {
+        try {
+            // 1. 构建消息列表
+            List<Map<String, String>> messages = new ArrayList<>();
+            Map<String, String> userMsg = new HashMap<>();
+            userMsg.put("role", "user");
+            userMsg.put("content", userMessage);
+            messages.add(userMsg);
+            String messagesJson = objectMapper.writeValueAsString(messages);
+
+            // 2. 构建工具列表 JSON
+            String toolsJson = buildToolsJson();
+
+            // 3. 构建请求体（DeepSeek 格式）
+            String requestBody = String.format("""
+            {
+                "model": "deepseek-chat",
+                "messages": %s,
+                "tools": %s,
+                "tool_choice": "auto",
+                "max_tokens": 500
+            }
+            """, messagesJson, toolsJson);
+
+            System.out.println("📤 请求体: " + requestBody);
+
+            // 4. 发送 HTTP 请求到 DeepSeek
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.deepseek.com/chat/completions"))  // DeepSeek 地址
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + DEEPSEEK_API_KEY)  // DeepSeek Key
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = httpResponse.body();
+            System.out.println("📡 响应状态码: " + httpResponse.statusCode());
+
+            // 5. 解析响应（DeepSeek 返回标准 OpenAI 格式）
+            JsonNode root = objectMapper.readTree(responseBody);
+            JsonNode message = root.path("choices").path(0).path("message");
+
+            // ✅ DeepSeek 标准格式：检查 tool_calls
+            if (message.has("tool_calls") && message.path("tool_calls").size() > 0) {
+                JsonNode toolCall = message.path("tool_calls").path(0);
+                String toolName = toolCall.path("function").path("name").asText();
+                String arguments = toolCall.path("function").path("arguments").asText();
+
+                System.out.println("🔧 调用工具: " + toolName);
+                System.out.println("📥 参数: " + arguments);
+
+                // 执行工具
+                Tool tool = toolRegistry.getTool(toolName);
+                if (tool == null) {
+                    return "⚠️ 未找到工具: " + toolName;
+                }
+                String toolResult = tool.execute(arguments);
+                System.out.println("📤 工具结果: " + toolResult);
+
+                // ✅ 如果是生成图片工具，返回的是图片数据，不能直接发给模型
+                if ("GenerateImage".equals(toolName)) {
+                    // 提取图片字节数组
+                    byte[] imageBytes = GenerateImageTool.extractImageBytes(toolResult);
+                    if (imageBytes != null) {
+                        // 返回特殊标记，让调用者发送图片
+                        return "IMAGE_DATA:" + java.util.Base64.getEncoder().encodeToString(imageBytes);
+                    }
+                    return "❌ 图片生成失败";
+                }
+
+
+                // ✅ DeepSeek 需要二次调用
+                // 把工具结果加到 messages 中
+                List<Map<String, Object>> fullMessages = new ArrayList<>();
+                // 用户消息
+                Map<String, Object> userMsg2 = new HashMap<>();
+                userMsg2.put("role", "user");
+                userMsg2.put("content", userMessage);
+                fullMessages.add(userMsg2);
+                // 助手的 tool_calls 响应
+                Map<String, Object> assistantMsg = new HashMap<>();
+                assistantMsg.put("role", "assistant");
+                assistantMsg.put("tool_calls", message.path("tool_calls"));
+                fullMessages.add(assistantMsg);
+                // 工具结果
+                Map<String, Object> toolMsg = new HashMap<>();
+                toolMsg.put("role", "tool");
+                toolMsg.put("tool_call_id", toolCall.path("id").asText());
+                toolMsg.put("content", toolResult);
+                fullMessages.add(toolMsg);
+
+                String fullMessagesJson = objectMapper.writeValueAsString(fullMessages);
+                String secondRequestBody = String.format("""
+                {
+                    "model": "deepseek-chat",
+                    "messages": %s,
+                    "max_tokens": 500
+                }
+                """, fullMessagesJson);
+
+                System.out.println("📤 第二次请求体: " + secondRequestBody);
+
+                // 发送第二次请求
+                HttpRequest secondRequest = HttpRequest.newBuilder()
+                        .uri(URI.create("https://api.deepseek.com/chat/completions"))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + DEEPSEEK_API_KEY)
+                        .POST(HttpRequest.BodyPublishers.ofString(secondRequestBody))
+                        .build();
+
+                HttpResponse<String> secondResponse = httpClient.send(secondRequest, HttpResponse.BodyHandlers.ofString());
+                String secondResponseBody = secondResponse.body();
+                System.out.println("📡 第二次响应状态码: " + secondResponse.statusCode());
+
+                JsonNode secondRoot = objectMapper.readTree(secondResponseBody);
+                return secondRoot.path("choices").path(0).path("message").path("content").asText();
+
+            } else {
+                // 没有工具调用，直接返回模型回复
+                return message.path("content").asText();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "工具调用异常: " + e.getMessage();
+        }
     }
 
     // ==================== 处理消息 ====================
@@ -421,7 +589,18 @@ public class WeChatBotService {
                             || content.matches(".*[给我|帮我].*[说|讲|念].*");
 
                     // 获取 AI 回复
-                    String reply = callSiliconFlowText(content);
+                    String reply = callSiliconFlowWithTools(content);
+
+                    if (reply != null && reply.startsWith("IMAGE_DATA:")) {
+                        String base64 = reply.substring(11);
+                        byte[] imageBytes = java.util.Base64.getDecoder().decode(base64);
+                        client.sendImage(fromUser, imageBytes, "generated.png", "为你生成的图片");
+                        System.out.println("✅ 已发送生成的图片");
+                    } else {
+                        client.sendText(fromUser, reply);
+                        System.out.println("✅ 已回复文字");
+                    }
+
                     System.out.println("SiliconFlow 回复: " + reply);
 
                     // ✅ 如果用户要语音，强制使用语音友好的简短回复

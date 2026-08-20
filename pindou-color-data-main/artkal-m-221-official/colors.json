@@ -1,0 +1,2702 @@
+{
+  "schema": "pindou-color-palette",
+  "id": "artkal-m-221-official",
+  "title": "优肯M221色",
+  "description": "优肯 / Artkal M系列 221色（官方整理）",
+  "generated_at": "2026-05-19",
+  "count": 221,
+  "rows_with_rgb": 221,
+  "rows_without_rgb": 0,
+  "market": {
+    "tier": "A-",
+    "score": 3.9,
+    "label": "官方 MARD 兼容新体系",
+    "summary": "Artkal M 221 是官方 M 系列，对 MARD 色号需求有兼容意义；国内小店主流度目前低于 MARD 标准本体，但官方性和扩展价值较强。",
+    "evidence": [
+      "Artkal M-2.6mm 官方页写明 221 colors，并提供 RGB color chart。",
+      "官方页说明 M 系列与 C 系列同材质同尺寸，可一起熔合。",
+      "优肯/Artkal 在多个工具和教程中被列为主流或常见品牌。"
+    ]
+  },
+  "groups": {
+    "MA": 26,
+    "MB": 32,
+    "MC": 29,
+    "MD": 26,
+    "ME": 24,
+    "MF": 25,
+    "MG": 21,
+    "MH": 23,
+    "MM": 15
+  },
+  "sources": [
+    {
+      "id": "src1",
+      "url": "https://cdn.shopify.com/s/files/1/1323/8195/files/M_MINI_Beads_RGB_Color_Chart_2025.pdf?v=1760661747",
+      "quality": "official_pdf",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "id": "src2",
+      "url": "https://bitbead.pomodiary.com/zh/colors/artkal-mini/MH1",
+      "quality": "public_tool_display_hex",
+      "notes": "Bitbead displays Artkal Mini MH1 Transparent as #FFFFFF; Artkal official RGB PDF labels MH1 as Transparent without numeric RGB, so this is a display placeholder, not an official numeric physical color."
+    }
+  ],
+  "colors": [
+    {
+      "code": "MA1",
+      "hex": "#FFF6D4",
+      "rgb": [
+        255,
+        246,
+        212
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA2",
+      "hex": "#F6F9E5",
+      "rgb": [
+        246,
+        249,
+        229
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA3",
+      "hex": "#FFFBAA",
+      "rgb": [
+        255,
+        251,
+        170
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA4",
+      "hex": "#FFDF58",
+      "rgb": [
+        255,
+        223,
+        88
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA5",
+      "hex": "#FECF4D",
+      "rgb": [
+        254,
+        207,
+        77
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA6",
+      "hex": "#FFA80C",
+      "rgb": [
+        255,
+        168,
+        12
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA7",
+      "hex": "#FF8837",
+      "rgb": [
+        255,
+        136,
+        55
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA8",
+      "hex": "#EAC431",
+      "rgb": [
+        234,
+        196,
+        49
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA9",
+      "hex": "#F1AA8F",
+      "rgb": [
+        241,
+        170,
+        143
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA10",
+      "hex": "#FF8F42",
+      "rgb": [
+        255,
+        143,
+        66
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA11",
+      "hex": "#FFE1A1",
+      "rgb": [
+        255,
+        225,
+        161
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA12",
+      "hex": "#F4B39C",
+      "rgb": [
+        244,
+        179,
+        156
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA13",
+      "hex": "#FFB100",
+      "rgb": [
+        255,
+        177,
+        0
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA14",
+      "hex": "#FF6510",
+      "rgb": [
+        255,
+        101,
+        16
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA15",
+      "hex": "#DAF05C",
+      "rgb": [
+        218,
+        240,
+        92
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA16",
+      "hex": "#F9FBBE",
+      "rgb": [
+        249,
+        251,
+        190
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA17",
+      "hex": "#FFD976",
+      "rgb": [
+        255,
+        217,
+        118
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA18",
+      "hex": "#FFCA9A",
+      "rgb": [
+        255,
+        202,
+        154
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA19",
+      "hex": "#EC7A92",
+      "rgb": [
+        236,
+        122,
+        146
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA20",
+      "hex": "#E5BE55",
+      "rgb": [
+        229,
+        190,
+        85
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA21",
+      "hex": "#FFE596",
+      "rgb": [
+        255,
+        229,
+        150
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA22",
+      "hex": "#F7E898",
+      "rgb": [
+        247,
+        232,
+        152
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA23",
+      "hex": "#F0CBB1",
+      "rgb": [
+        240,
+        203,
+        177
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA24",
+      "hex": "#F5FCD1",
+      "rgb": [
+        245,
+        252,
+        209
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA25",
+      "hex": "#F6D487",
+      "rgb": [
+        246,
+        212,
+        135
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MA26",
+      "hex": "#FFCB4B",
+      "rgb": [
+        255,
+        203,
+        75
+      ],
+      "group": "MA",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB1",
+      "hex": "#D2E318",
+      "rgb": [
+        210,
+        227,
+        24
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB2",
+      "hex": "#79CD41",
+      "rgb": [
+        121,
+        205,
+        65
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB3",
+      "hex": "#82D7A1",
+      "rgb": [
+        130,
+        215,
+        161
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB4",
+      "hex": "#65DF4F",
+      "rgb": [
+        101,
+        223,
+        79
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB5",
+      "hex": "#5FC873",
+      "rgb": [
+        95,
+        200,
+        115
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB6",
+      "hex": "#49D1AE",
+      "rgb": [
+        73,
+        209,
+        174
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB7",
+      "hex": "#009696",
+      "rgb": [
+        0,
+        150,
+        150
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB8",
+      "hex": "#08774F",
+      "rgb": [
+        8,
+        119,
+        79
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB9",
+      "hex": "#183823",
+      "rgb": [
+        24,
+        56,
+        35
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB10",
+      "hex": "#83CFC3",
+      "rgb": [
+        131,
+        207,
+        195
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB11",
+      "hex": "#5A6A27",
+      "rgb": [
+        90,
+        106,
+        39
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB12",
+      "hex": "#045F45",
+      "rgb": [
+        4,
+        95,
+        69
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB13",
+      "hex": "#E2FFB3",
+      "rgb": [
+        226,
+        255,
+        179
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB14",
+      "hex": "#9DD12E",
+      "rgb": [
+        157,
+        209,
+        46
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB15",
+      "hex": "#254B3C",
+      "rgb": [
+        37,
+        75,
+        60
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB16",
+      "hex": "#D0FCAD",
+      "rgb": [
+        208,
+        252,
+        173
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB17",
+      "hex": "#8CA12A",
+      "rgb": [
+        140,
+        161,
+        42
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB18",
+      "hex": "#D2D958",
+      "rgb": [
+        210,
+        217,
+        88
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB19",
+      "hex": "#49BCA9",
+      "rgb": [
+        73,
+        188,
+        169
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB20",
+      "hex": "#E8FDEC",
+      "rgb": [
+        232,
+        253,
+        236
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB21",
+      "hex": "#188B81",
+      "rgb": [
+        24,
+        139,
+        129
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB22",
+      "hex": "#0C5C5B",
+      "rgb": [
+        12,
+        92,
+        91
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB23",
+      "hex": "#3D461B",
+      "rgb": [
+        61,
+        70,
+        27
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB24",
+      "hex": "#EAFCB6",
+      "rgb": [
+        234,
+        252,
+        182
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB25",
+      "hex": "#538771",
+      "rgb": [
+        83,
+        135,
+        113
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB26",
+      "hex": "#8A7A40",
+      "rgb": [
+        138,
+        122,
+        64
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB27",
+      "hex": "#D2DEB6",
+      "rgb": [
+        210,
+        222,
+        182
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB28",
+      "hex": "#9FF4C2",
+      "rgb": [
+        159,
+        244,
+        194
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB29",
+      "hex": "#BBD747",
+      "rgb": [
+        187,
+        215,
+        71
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB30",
+      "hex": "#F5FFE6",
+      "rgb": [
+        245,
+        255,
+        230
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB31",
+      "hex": "#BFE1C2",
+      "rgb": [
+        191,
+        225,
+        194
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MB32",
+      "hex": "#9FBA5C",
+      "rgb": [
+        159,
+        186,
+        92
+      ],
+      "group": "MB",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC1",
+      "hex": "#D5E3DE",
+      "rgb": [
+        213,
+        227,
+        222
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC2",
+      "hex": "#BBF1F4",
+      "rgb": [
+        187,
+        241,
+        244
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC3",
+      "hex": "#73C0DF",
+      "rgb": [
+        115,
+        192,
+        223
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC4",
+      "hex": "#33B3E1",
+      "rgb": [
+        51,
+        179,
+        225
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC5",
+      "hex": "#00A3CA",
+      "rgb": [
+        0,
+        163,
+        202
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC6",
+      "hex": "#58A0D9",
+      "rgb": [
+        88,
+        160,
+        217
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC7",
+      "hex": "#0588CC",
+      "rgb": [
+        5,
+        136,
+        204
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC8",
+      "hex": "#005F9E",
+      "rgb": [
+        0,
+        95,
+        158
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC9",
+      "hex": "#086FB9",
+      "rgb": [
+        8,
+        111,
+        185
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC10",
+      "hex": "#52B4E0",
+      "rgb": [
+        82,
+        180,
+        224
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC11",
+      "hex": "#00A9B9",
+      "rgb": [
+        0,
+        169,
+        185
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC12",
+      "hex": "#1C375A",
+      "rgb": [
+        28,
+        55,
+        90
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC13",
+      "hex": "#CEE0F0",
+      "rgb": [
+        206,
+        224,
+        240
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC14",
+      "hex": "#EBF5F4",
+      "rgb": [
+        235,
+        245,
+        244
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC15",
+      "hex": "#00AAAD",
+      "rgb": [
+        0,
+        170,
+        173
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC16",
+      "hex": "#004C7D",
+      "rgb": [
+        0,
+        76,
+        125
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC17",
+      "hex": "#5BD4F6",
+      "rgb": [
+        91,
+        212,
+        246
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC18",
+      "hex": "#36515C",
+      "rgb": [
+        54,
+        81,
+        92
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC19",
+      "hex": "#0F909D",
+      "rgb": [
+        15,
+        144,
+        157
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC20",
+      "hex": "#0084B7",
+      "rgb": [
+        0,
+        132,
+        183
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC21",
+      "hex": "#DDECFA",
+      "rgb": [
+        221,
+        236,
+        250
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC22",
+      "hex": "#84BAC2",
+      "rgb": [
+        132,
+        186,
+        194
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC23",
+      "hex": "#CBDBDB",
+      "rgb": [
+        203,
+        219,
+        219
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC24",
+      "hex": "#88BDE2",
+      "rgb": [
+        136,
+        189,
+        226
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC25",
+      "hex": "#B3ECE0",
+      "rgb": [
+        179,
+        236,
+        224
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC26",
+      "hex": "#3E9EBF",
+      "rgb": [
+        62,
+        158,
+        191
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC27",
+      "hex": "#E9F0F3",
+      "rgb": [
+        233,
+        240,
+        243
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC28",
+      "hex": "#C2CDE3",
+      "rgb": [
+        194,
+        205,
+        227
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MC29",
+      "hex": "#586B8F",
+      "rgb": [
+        88,
+        107,
+        143
+      ],
+      "group": "MC",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD1",
+      "hex": "#7292E2",
+      "rgb": [
+        114,
+        146,
+        226
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD2",
+      "hex": "#6E8CCC",
+      "rgb": [
+        110,
+        140,
+        204
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD3",
+      "hex": "#13419A",
+      "rgb": [
+        19,
+        65,
+        154
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD4",
+      "hex": "#1E3175",
+      "rgb": [
+        30,
+        49,
+        117
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD5",
+      "hex": "#B850B2",
+      "rgb": [
+        184,
+        80,
+        178
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD6",
+      "hex": "#AD92E9",
+      "rgb": [
+        173,
+        146,
+        233
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD7",
+      "hex": "#5F2D91",
+      "rgb": [
+        95,
+        45,
+        145
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD8",
+      "hex": "#D7CDF1",
+      "rgb": [
+        215,
+        205,
+        241
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD9",
+      "hex": "#BDB2E6",
+      "rgb": [
+        189,
+        178,
+        230
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD10",
+      "hex": "#251B58",
+      "rgb": [
+        37,
+        27,
+        88
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD11",
+      "hex": "#A2BBE7",
+      "rgb": [
+        162,
+        187,
+        231
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD12",
+      "hex": "#CF8BBE",
+      "rgb": [
+        207,
+        139,
+        190
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD13",
+      "hex": "#B80096",
+      "rgb": [
+        184,
+        0,
+        150
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD14",
+      "hex": "#A137A7",
+      "rgb": [
+        161,
+        55,
+        167
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD15",
+      "hex": "#4A388A",
+      "rgb": [
+        74,
+        56,
+        138
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD16",
+      "hex": "#DCE8F6",
+      "rgb": [
+        220,
+        232,
+        246
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD17",
+      "hex": "#AECEF0",
+      "rgb": [
+        174,
+        206,
+        240
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD18",
+      "hex": "#B38EDB",
+      "rgb": [
+        179,
+        142,
+        219
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD19",
+      "hex": "#E8D2EA",
+      "rgb": [
+        232,
+        210,
+        234
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD20",
+      "hex": "#B460C3",
+      "rgb": [
+        180,
+        96,
+        195
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD21",
+      "hex": "#842A94",
+      "rgb": [
+        132,
+        42,
+        148
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD22",
+      "hex": "#4B5E9E",
+      "rgb": [
+        75,
+        94,
+        158
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD23",
+      "hex": "#D6D2E2",
+      "rgb": [
+        214,
+        210,
+        226
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD24",
+      "hex": "#7776D1",
+      "rgb": [
+        119,
+        118,
+        209
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD25",
+      "hex": "#3837A8",
+      "rgb": [
+        56,
+        55,
+        168
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MD26",
+      "hex": "#DDC8DD",
+      "rgb": [
+        221,
+        200,
+        221
+      ],
+      "group": "MD",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME1",
+      "hex": "#FDD6C9",
+      "rgb": [
+        253,
+        214,
+        201
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME2",
+      "hex": "#FFD8F4",
+      "rgb": [
+        255,
+        216,
+        244
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME3",
+      "hex": "#FFA0C3",
+      "rgb": [
+        255,
+        160,
+        195
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME4",
+      "hex": "#F67AAB",
+      "rgb": [
+        246,
+        122,
+        171
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME5",
+      "hex": "#DA5B95",
+      "rgb": [
+        218,
+        91,
+        149
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME6",
+      "hex": "#FF4B78",
+      "rgb": [
+        255,
+        75,
+        120
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME7",
+      "hex": "#9E156B",
+      "rgb": [
+        158,
+        21,
+        107
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME8",
+      "hex": "#FFE1E6",
+      "rgb": [
+        255,
+        225,
+        230
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME9",
+      "hex": "#F378CA",
+      "rgb": [
+        243,
+        120,
+        202
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME10",
+      "hex": "#BE316D",
+      "rgb": [
+        190,
+        49,
+        109
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME11",
+      "hex": "#FFE8DA",
+      "rgb": [
+        255,
+        232,
+        218
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME12",
+      "hex": "#FFA5C6",
+      "rgb": [
+        255,
+        165,
+        198
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME13",
+      "hex": "#B53883",
+      "rgb": [
+        181,
+        56,
+        131
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME14",
+      "hex": "#FFDDC7",
+      "rgb": [
+        255,
+        221,
+        199
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME15",
+      "hex": "#E5C6D0",
+      "rgb": [
+        229,
+        198,
+        208
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME16",
+      "hex": "#F9F2EB",
+      "rgb": [
+        249,
+        242,
+        235
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME17",
+      "hex": "#E7DCE6",
+      "rgb": [
+        231,
+        220,
+        230
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME18",
+      "hex": "#FFD3E6",
+      "rgb": [
+        255,
+        211,
+        230
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME19",
+      "hex": "#FFD5EC",
+      "rgb": [
+        255,
+        213,
+        236
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME20",
+      "hex": "#F3DCE8",
+      "rgb": [
+        243,
+        220,
+        232
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME21",
+      "hex": "#BD9CA3",
+      "rgb": [
+        189,
+        156,
+        163
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME22",
+      "hex": "#C578A5",
+      "rgb": [
+        197,
+        120,
+        165
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME23",
+      "hex": "#A37A9B",
+      "rgb": [
+        163,
+        122,
+        155
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "ME24",
+      "hex": "#F4E8FF",
+      "rgb": [
+        244,
+        232,
+        255
+      ],
+      "group": "ME",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF1",
+      "hex": "#FF7F67",
+      "rgb": [
+        255,
+        127,
+        103
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF2",
+      "hex": "#FF5D46",
+      "rgb": [
+        255,
+        93,
+        70
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF3",
+      "hex": "#E3564A",
+      "rgb": [
+        227,
+        86,
+        74
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF4",
+      "hex": "#C7270D",
+      "rgb": [
+        199,
+        39,
+        13
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF5",
+      "hex": "#BE0A27",
+      "rgb": [
+        190,
+        10,
+        39
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF6",
+      "hex": "#83411E",
+      "rgb": [
+        131,
+        65,
+        30
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF7",
+      "hex": "#730037",
+      "rgb": [
+        115,
+        0,
+        55
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF8",
+      "hex": "#AB0022",
+      "rgb": [
+        171,
+        0,
+        34
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF9",
+      "hex": "#DE7995",
+      "rgb": [
+        222,
+        121,
+        149
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF10",
+      "hex": "#AB613C",
+      "rgb": [
+        171,
+        97,
+        60
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF11",
+      "hex": "#5C2929",
+      "rgb": [
+        92,
+        41,
+        41
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF12",
+      "hex": "#F34461",
+      "rgb": [
+        243,
+        68,
+        97
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF13",
+      "hex": "#C64239",
+      "rgb": [
+        198,
+        66,
+        57
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF14",
+      "hex": "#FFA5BB",
+      "rgb": [
+        255,
+        165,
+        187
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF15",
+      "hex": "#BC0018",
+      "rgb": [
+        188,
+        0,
+        24
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF16",
+      "hex": "#FFD7CB",
+      "rgb": [
+        255,
+        215,
+        203
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF17",
+      "hex": "#F19D8A",
+      "rgb": [
+        241,
+        157,
+        138
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF18",
+      "hex": "#DC7B45",
+      "rgb": [
+        220,
+        123,
+        69
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF19",
+      "hex": "#C74651",
+      "rgb": [
+        199,
+        70,
+        81
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF20",
+      "hex": "#D8A89E",
+      "rgb": [
+        216,
+        168,
+        158
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF21",
+      "hex": "#EB9DB9",
+      "rgb": [
+        235,
+        157,
+        185
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF22",
+      "hex": "#FFD4D4",
+      "rgb": [
+        255,
+        212,
+        212
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF23",
+      "hex": "#EA8474",
+      "rgb": [
+        234,
+        132,
+        116
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF24",
+      "hex": "#F7C1C5",
+      "rgb": [
+        247,
+        193,
+        197
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MF25",
+      "hex": "#FC5768",
+      "rgb": [
+        252,
+        87,
+        104
+      ],
+      "group": "MF",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG1",
+      "hex": "#FFE7C8",
+      "rgb": [
+        255,
+        231,
+        200
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG2",
+      "hex": "#FFD6C3",
+      "rgb": [
+        255,
+        214,
+        195
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG3",
+      "hex": "#EEB694",
+      "rgb": [
+        238,
+        182,
+        148
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG4",
+      "hex": "#D9A58C",
+      "rgb": [
+        217,
+        165,
+        140
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG5",
+      "hex": "#F49630",
+      "rgb": [
+        244,
+        150,
+        48
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG6",
+      "hex": "#F19937",
+      "rgb": [
+        241,
+        153,
+        55
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG7",
+      "hex": "#AC745B",
+      "rgb": [
+        172,
+        116,
+        91
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG8",
+      "hex": "#694A42",
+      "rgb": [
+        105,
+        74,
+        66
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG9",
+      "hex": "#F7CC9D",
+      "rgb": [
+        247,
+        204,
+        157
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG10",
+      "hex": "#C7832F",
+      "rgb": [
+        199,
+        131,
+        47
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG11",
+      "hex": "#D3C391",
+      "rgb": [
+        211,
+        195,
+        145
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG12",
+      "hex": "#E6B986",
+      "rgb": [
+        230,
+        185,
+        134
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG13",
+      "hex": "#C67B4F",
+      "rgb": [
+        198,
+        123,
+        79
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG14",
+      "hex": "#8D6242",
+      "rgb": [
+        141,
+        98,
+        66
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG15",
+      "hex": "#F6F7E2",
+      "rgb": [
+        246,
+        247,
+        226
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG16",
+      "hex": "#F2E7D7",
+      "rgb": [
+        242,
+        231,
+        215
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG17",
+      "hex": "#786562",
+      "rgb": [
+        120,
+        101,
+        98
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG18",
+      "hex": "#FEF5EB",
+      "rgb": [
+        254,
+        245,
+        235
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG19",
+      "hex": "#F0AB47",
+      "rgb": [
+        240,
+        171,
+        71
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG20",
+      "hex": "#AE6949",
+      "rgb": [
+        174,
+        105,
+        73
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MG21",
+      "hex": "#BF8C6E",
+      "rgb": [
+        191,
+        140,
+        110
+      ],
+      "group": "MG",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH1",
+      "hex": "#FFFFFF00",
+      "rgb": [
+        255,
+        255,
+        255,
+        0
+      ],
+      "group": "MH",
+      "source": "src2",
+      "transparency": "transparent",
+      "notes": "Bitbead displays Artkal Mini MH1 Transparent as #FFFFFF; Artkal official RGB PDF labels MH1 as Transparent without numeric RGB, so this is a display placeholder, not an official numeric physical color."
+    },
+    {
+      "code": "MH2",
+      "hex": "#FFFFFF",
+      "rgb": [
+        255,
+        255,
+        255
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH3",
+      "hex": "#9B9B9B",
+      "rgb": [
+        155,
+        155,
+        155
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH4",
+      "hex": "#6D6D6D",
+      "rgb": [
+        109,
+        109,
+        109
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH5",
+      "hex": "#4D4D4D",
+      "rgb": [
+        77,
+        77,
+        77
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH6",
+      "hex": "#3A3A3A",
+      "rgb": [
+        58,
+        58,
+        58
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH7",
+      "hex": "#000000",
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH8",
+      "hex": "#FFF0F1",
+      "rgb": [
+        255,
+        240,
+        241
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH9",
+      "hex": "#E3E6DF",
+      "rgb": [
+        227,
+        230,
+        223
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH10",
+      "hex": "#E2E0E7",
+      "rgb": [
+        226,
+        224,
+        231
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH11",
+      "hex": "#BCB8B5",
+      "rgb": [
+        188,
+        184,
+        181
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH12",
+      "hex": "#F7F3E1",
+      "rgb": [
+        247,
+        243,
+        225
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH13",
+      "hex": "#EADDC8",
+      "rgb": [
+        234,
+        221,
+        200
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH14",
+      "hex": "#B8C8C5",
+      "rgb": [
+        184,
+        200,
+        197
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH15",
+      "hex": "#99ABAC",
+      "rgb": [
+        153,
+        171,
+        172
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH16",
+      "hex": "#444236",
+      "rgb": [
+        68,
+        66,
+        54
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH17",
+      "hex": "#FAFBF5",
+      "rgb": [
+        250,
+        251,
+        245
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH18",
+      "hex": "#FEFEEE",
+      "rgb": [
+        254,
+        254,
+        238
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH19",
+      "hex": "#FBF2E4",
+      "rgb": [
+        251,
+        242,
+        228
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH20",
+      "hex": "#9EAEAD",
+      "rgb": [
+        158,
+        174,
+        173
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH21",
+      "hex": "#FDFFF2",
+      "rgb": [
+        253,
+        255,
+        242
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH22",
+      "hex": "#EDEDE7",
+      "rgb": [
+        237,
+        237,
+        231
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MH23",
+      "hex": "#B4B8A7",
+      "rgb": [
+        180,
+        184,
+        167
+      ],
+      "group": "MH",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM1",
+      "hex": "#AEBBA8",
+      "rgb": [
+        174,
+        187,
+        168
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM2",
+      "hex": "#729376",
+      "rgb": [
+        114,
+        147,
+        118
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM3",
+      "hex": "#6A8890",
+      "rgb": [
+        106,
+        136,
+        144
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM4",
+      "hex": "#BEB39D",
+      "rgb": [
+        190,
+        179,
+        157
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM5",
+      "hex": "#B8B78C",
+      "rgb": [
+        184,
+        183,
+        140
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM6",
+      "hex": "#B2AC93",
+      "rgb": [
+        178,
+        172,
+        147
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM7",
+      "hex": "#BC9F94",
+      "rgb": [
+        188,
+        159,
+        148
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM8",
+      "hex": "#968381",
+      "rgb": [
+        150,
+        131,
+        129
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM9",
+      "hex": "#B39D88",
+      "rgb": [
+        179,
+        157,
+        136
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM10",
+      "hex": "#B796A3",
+      "rgb": [
+        183,
+        150,
+        163
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM11",
+      "hex": "#B096B9",
+      "rgb": [
+        176,
+        150,
+        185
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM12",
+      "hex": "#685951",
+      "rgb": [
+        104,
+        89,
+        81
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM13",
+      "hex": "#C79582",
+      "rgb": [
+        199,
+        149,
+        130
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM14",
+      "hex": "#CA694F",
+      "rgb": [
+        202,
+        105,
+        79
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    },
+    {
+      "code": "MM15",
+      "hex": "#929FA9",
+      "rgb": [
+        146,
+        159,
+        169
+      ],
+      "group": "MM",
+      "source": "src1",
+      "notes": "Extracted from official Artkal RGB PDF."
+    }
+  ]
+}

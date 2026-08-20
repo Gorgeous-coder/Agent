@@ -1,0 +1,3231 @@
+{
+  "schema": "pindou-color-palette",
+  "id": "panpan-289",
+  "title": "盼盼家",
+  "description": "盼盼 289色",
+  "generated_at": "2026-05-19",
+  "count": 289,
+  "rows_with_rgb": 289,
+  "rows_without_rgb": 0,
+  "market": {
+    "tier": "B+",
+    "score": 3.6,
+    "label": "工具生态常见品牌",
+    "summary": "盼盼在国内图纸工具和公开色卡中出现频率较高，但公开电商/媒体声量弱于 MARD、COCO、Artkal。",
+    "evidence": [
+      "PinDou 图纸生成器覆盖盼盼。",
+      "BeadPattern 支持 MARD、COCO、漫漫、盼盼、Artkal 五大品牌色号系统。",
+      "爱拼豆 App Store 描述列出盼盼拼豆等主流色板。"
+    ]
+  },
+  "groups": {
+    "黄": 25,
+    "橙棕": 49,
+    "红粉": 52,
+    "灰白黑": 47,
+    "紫": 35,
+    "绿": 30,
+    "青蓝": 51
+  },
+  "sources": [
+    {
+      "id": "src1",
+      "url": "https://git.xiongxiao.me/abearxiong/get-colors-from-beans/src/branch/main/get-colors.json",
+      "quality": "third_party_public_repository",
+      "notes": "Extracted from public HTML color data repository."
+    }
+  ],
+  "colors": [
+    {
+      "code": "65",
+      "hex": "#FAF5CD",
+      "rgb": [
+        250,
+        245,
+        205
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "2",
+      "hex": "#FCFED6",
+      "rgb": [
+        252,
+        254,
+        214
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "28",
+      "hex": "#FCFF92",
+      "rgb": [
+        252,
+        255,
+        146
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "3",
+      "hex": "#F7EC5C",
+      "rgb": [
+        247,
+        236,
+        92
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "74",
+      "hex": "#F0D83A",
+      "rgb": [
+        240,
+        216,
+        58
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "29",
+      "hex": "#FDA951",
+      "rgb": [
+        253,
+        169,
+        81
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "4",
+      "hex": "#FA8C4F",
+      "rgb": [
+        250,
+        140,
+        79
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "88",
+      "hex": "#FDD94D",
+      "rgb": [
+        253,
+        217,
+        77
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "90",
+      "hex": "#F99C5F",
+      "rgb": [
+        249,
+        156,
+        95
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "89",
+      "hex": "#F47E36",
+      "rgb": [
+        244,
+        126,
+        54
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "100",
+      "hex": "#FEDB99",
+      "rgb": [
+        254,
+        219,
+        153
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "99",
+      "hex": "#FDA276",
+      "rgb": [
+        253,
+        162,
+        118
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "131",
+      "hex": "#FEC667",
+      "rgb": [
+        254,
+        198,
+        103
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "138",
+      "hex": "#F85842",
+      "rgb": [
+        248,
+        88,
+        66
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "150",
+      "hex": "#FBF65E",
+      "rgb": [
+        251,
+        246,
+        94
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "216",
+      "hex": "#FEFF97",
+      "rgb": [
+        254,
+        255,
+        151
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "213",
+      "hex": "#FDE173",
+      "rgb": [
+        253,
+        225,
+        115
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "223",
+      "hex": "#FCBF80",
+      "rgb": [
+        252,
+        191,
+        128
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "218",
+      "hex": "#FD7E77",
+      "rgb": [
+        253,
+        126,
+        119
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "242",
+      "hex": "#F9D66E",
+      "rgb": [
+        249,
+        214,
+        110
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "276",
+      "hex": "#FAE393",
+      "rgb": [
+        250,
+        227,
+        147
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "270",
+      "hex": "#EDF878",
+      "rgb": [
+        237,
+        248,
+        120
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "274",
+      "hex": "#E1C9BD",
+      "rgb": [
+        225,
+        201,
+        189
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "288",
+      "hex": "#F3F6A9",
+      "rgb": [
+        243,
+        246,
+        169
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "289",
+      "hex": "#FFD785",
+      "rgb": [
+        255,
+        215,
+        133
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "290",
+      "hex": "#FEC832",
+      "rgb": [
+        254,
+        200,
+        50
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "168",
+      "hex": "#BBC6B6",
+      "rgb": [
+        187,
+        198,
+        182
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "172",
+      "hex": "#909994",
+      "rgb": [
+        144,
+        153,
+        148
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "166",
+      "hex": "#697E80",
+      "rgb": [
+        105,
+        126,
+        128
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "167",
+      "hex": "#E0D4BC",
+      "rgb": [
+        224,
+        212,
+        188
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "174",
+      "hex": "#D0CBAE",
+      "rgb": [
+        208,
+        203,
+        174
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "169",
+      "hex": "#B0AA86",
+      "rgb": [
+        176,
+        170,
+        134
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "171",
+      "hex": "#B0A796",
+      "rgb": [
+        176,
+        167,
+        150
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "177",
+      "hex": "#AE8082",
+      "rgb": [
+        174,
+        128,
+        130
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "170",
+      "hex": "#A88764",
+      "rgb": [
+        168,
+        135,
+        100
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "164",
+      "hex": "#C6B2BB",
+      "rgb": [
+        198,
+        178,
+        187
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "176",
+      "hex": "#9D7693",
+      "rgb": [
+        157,
+        118,
+        147
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "173",
+      "hex": "#644B51",
+      "rgb": [
+        100,
+        75,
+        81
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "175",
+      "hex": "#C79266",
+      "rgb": [
+        199,
+        146,
+        102
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "165",
+      "hex": "#C37463",
+      "rgb": [
+        195,
+        116,
+        99
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "178",
+      "hex": "#747D7A",
+      "rgb": [
+        116,
+        125,
+        122
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "69",
+      "hex": "#FCFDFF",
+      "rgb": [
+        252,
+        253,
+        255
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "71",
+      "hex": "#F9F9F9",
+      "rgb": [
+        249,
+        249,
+        249
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "55",
+      "hex": "#ABABAB",
+      "rgb": [
+        171,
+        171,
+        171
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "73",
+      "hex": "#B6DBAF",
+      "rgb": [
+        182,
+        219,
+        175
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "72",
+      "hex": "#FEA2A3",
+      "rgb": [
+        254,
+        162,
+        163
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "56",
+      "hex": "#EB903F",
+      "rgb": [
+        235,
+        144,
+        63
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "157",
+      "hex": "#63CEA2",
+      "rgb": [
+        99,
+        206,
+        162
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "159",
+      "hex": "#E79273",
+      "rgb": [
+        231,
+        146,
+        115
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "158",
+      "hex": "#ECDB59",
+      "rgb": [
+        236,
+        219,
+        89
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "195",
+      "hex": "#DBD9DA",
+      "rgb": [
+        219,
+        217,
+        218
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "187",
+      "hex": "#DBC7EA",
+      "rgb": [
+        219,
+        199,
+        234
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "185",
+      "hex": "#F1E9D4",
+      "rgb": [
+        241,
+        233,
+        212
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "190",
+      "hex": "#E9EDEE",
+      "rgb": [
+        233,
+        237,
+        238
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "193",
+      "hex": "#ADCBF1",
+      "rgb": [
+        173,
+        203,
+        241
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "183",
+      "hex": "#337BAD",
+      "rgb": [
+        51,
+        123,
+        173
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "184",
+      "hex": "#668575",
+      "rgb": [
+        102,
+        133,
+        117
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "182",
+      "hex": "#FDC24E",
+      "rgb": [
+        253,
+        194,
+        78
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "179",
+      "hex": "#FDA42E",
+      "rgb": [
+        253,
+        164,
+        46
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "194",
+      "hex": "#FEBDA7",
+      "rgb": [
+        254,
+        189,
+        167
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "186",
+      "hex": "#FFDEE9",
+      "rgb": [
+        255,
+        222,
+        233
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "188",
+      "hex": "#FCBFD1",
+      "rgb": [
+        252,
+        191,
+        209
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "180",
+      "hex": "#E8BEC2",
+      "rgb": [
+        232,
+        190,
+        194
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "189",
+      "hex": "#DFAAA4",
+      "rgb": [
+        223,
+        170,
+        164
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "181",
+      "hex": "#A3656A",
+      "rgb": [
+        163,
+        101,
+        106
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "67",
+      "hex": "#D40E1F",
+      "rgb": [
+        212,
+        14,
+        31
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "24",
+      "hex": "#F13484",
+      "rgb": [
+        241,
+        52,
+        132
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "22",
+      "hex": "#FB852B",
+      "rgb": [
+        251,
+        133,
+        43
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "21",
+      "hex": "#F8ED33",
+      "rgb": [
+        248,
+        237,
+        51
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "23",
+      "hex": "#32C958",
+      "rgb": [
+        50,
+        201,
+        88
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "37",
+      "hex": "#1D779C",
+      "rgb": [
+        29,
+        119,
+        156
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "68",
+      "hex": "#1960C8",
+      "rgb": [
+        25,
+        96,
+        200
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "70",
+      "hex": "#945AB1",
+      "rgb": [
+        148,
+        90,
+        177
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "156",
+      "hex": "#F8DA54",
+      "rgb": [
+        248,
+        218,
+        84
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "151",
+      "hex": "#FCECF7",
+      "rgb": [
+        252,
+        236,
+        247
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "160",
+      "hex": "#D8D4D3",
+      "rgb": [
+        216,
+        212,
+        211
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "152",
+      "hex": "#56534E",
+      "rgb": [
+        86,
+        83,
+        78
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "231",
+      "hex": "#A3E7DC",
+      "rgb": [
+        163,
+        231,
+        220
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "237",
+      "hex": "#78CEE7",
+      "rgb": [
+        120,
+        206,
+        231
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "238",
+      "hex": "#3FCDCE",
+      "rgb": [
+        63,
+        205,
+        206
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "233",
+      "hex": "#4E8379",
+      "rgb": [
+        78,
+        131,
+        121
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "235",
+      "hex": "#7DCA9C",
+      "rgb": [
+        125,
+        202,
+        156
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "227",
+      "hex": "#C8E664",
+      "rgb": [
+        200,
+        230,
+        100
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "230",
+      "hex": "#E3CCBA",
+      "rgb": [
+        227,
+        204,
+        186
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "234",
+      "hex": "#A17140",
+      "rgb": [
+        161,
+        113,
+        64
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "226",
+      "hex": "#6B372C",
+      "rgb": [
+        107,
+        55,
+        44
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "224",
+      "hex": "#F6BB6F",
+      "rgb": [
+        246,
+        187,
+        111
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "228",
+      "hex": "#F3C6C0",
+      "rgb": [
+        243,
+        198,
+        192
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "225",
+      "hex": "#C76A62",
+      "rgb": [
+        199,
+        106,
+        98
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "229",
+      "hex": "#D093BC",
+      "rgb": [
+        208,
+        147,
+        188
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "232",
+      "hex": "#E58EAE",
+      "rgb": [
+        229,
+        142,
+        174
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "236",
+      "hex": "#9F85CF",
+      "rgb": [
+        159,
+        133,
+        207
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "59",
+      "hex": "#FF6FB7",
+      "rgb": [
+        255,
+        111,
+        183
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "60",
+      "hex": "#FDB583",
+      "rgb": [
+        253,
+        181,
+        131
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "57",
+      "hex": "#D8FCA4",
+      "rgb": [
+        216,
+        252,
+        164
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "58",
+      "hex": "#91DAFB",
+      "rgb": [
+        145,
+        218,
+        251
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "61",
+      "hex": "#E987EA",
+      "rgb": [
+        233,
+        135,
+        234
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "UNKNOWN-01",
+      "hex": "#F7D4E8",
+      "rgb": [
+        247,
+        212,
+        232
+      ],
+      "group": "紫",
+      "source": "src1",
+      "unidentified": true,
+      "original_code": "-",
+      "notes": "上游页面色号为 “-”，多路公开映射未能确认真实品牌色号；保留原始 HEX/RGB，使用稳定占位 ID。"
+    },
+    {
+      "code": "UNKNOWN-02",
+      "hex": "#F1FA7D",
+      "rgb": [
+        241,
+        250,
+        125
+      ],
+      "group": "黄",
+      "source": "src1",
+      "unidentified": true,
+      "original_code": "-",
+      "notes": "上游页面色号为 “-”，多路公开映射未能确认真实品牌色号；保留原始 HEX/RGB，使用稳定占位 ID。"
+    },
+    {
+      "code": "UNKNOWN-03",
+      "hex": "#5EE88C",
+      "rgb": [
+        94,
+        232,
+        140
+      ],
+      "group": "绿",
+      "source": "src1",
+      "unidentified": true,
+      "original_code": "-",
+      "notes": "上游页面色号为 “-”，多路公开映射未能确认真实品牌色号；保留原始 HEX/RGB，使用稳定占位 ID。"
+    },
+    {
+      "code": "UNKNOWN-04",
+      "hex": "#F8F5FE",
+      "rgb": [
+        248,
+        245,
+        254
+      ],
+      "group": "灰白黑",
+      "source": "src1",
+      "unidentified": true,
+      "original_code": "-",
+      "notes": "上游页面色号为 “-”，多路公开映射未能确认真实品牌色号；保留原始 HEX/RGB，使用稳定占位 ID。"
+    },
+    {
+      "code": "254",
+      "hex": "#DAABB3",
+      "rgb": [
+        218,
+        171,
+        179
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "255",
+      "hex": "#D6AA87",
+      "rgb": [
+        214,
+        170,
+        135
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "256",
+      "hex": "#C1BD8D",
+      "rgb": [
+        193,
+        189,
+        141
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "257",
+      "hex": "#96B69F",
+      "rgb": [
+        150,
+        182,
+        159
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "258",
+      "hex": "#849DC6",
+      "rgb": [
+        132,
+        157,
+        198
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "259",
+      "hex": "#94BFE2",
+      "rgb": [
+        148,
+        191,
+        226
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "260",
+      "hex": "#E2A9D2",
+      "rgb": [
+        226,
+        169,
+        210
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "261",
+      "hex": "#AB91C0",
+      "rgb": [
+        171,
+        145,
+        192
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "48",
+      "hex": "#DFF139",
+      "rgb": [
+        223,
+        241,
+        57
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "33",
+      "hex": "#64F343",
+      "rgb": [
+        100,
+        243,
+        67
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "26",
+      "hex": "#9FF685",
+      "rgb": [
+        159,
+        246,
+        133
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "66",
+      "hex": "#5FDF34",
+      "rgb": [
+        95,
+        223,
+        52
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "39",
+      "hex": "#39E158",
+      "rgb": [
+        57,
+        225,
+        88
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "11",
+      "hex": "#64E0A4",
+      "rgb": [
+        100,
+        224,
+        164
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "44",
+      "hex": "#3EAE7C",
+      "rgb": [
+        62,
+        174,
+        124
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "10",
+      "hex": "#1D9B54",
+      "rgb": [
+        29,
+        155,
+        84
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "79",
+      "hex": "#2A5037",
+      "rgb": [
+        42,
+        80,
+        55
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "96",
+      "hex": "#9AD1BA",
+      "rgb": [
+        154,
+        209,
+        186
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "97",
+      "hex": "#627032",
+      "rgb": [
+        98,
+        112,
+        50
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "106",
+      "hex": "#1A6E3D",
+      "rgb": [
+        26,
+        110,
+        61
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "128",
+      "hex": "#C8E87D",
+      "rgb": [
+        200,
+        232,
+        125
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "129",
+      "hex": "#ACE84C",
+      "rgb": [
+        172,
+        232,
+        76
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "130",
+      "hex": "#305335",
+      "rgb": [
+        48,
+        83,
+        53
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "141",
+      "hex": "#C0ED9C",
+      "rgb": [
+        192,
+        237,
+        156
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "142",
+      "hex": "#9EB33E",
+      "rgb": [
+        158,
+        179,
+        62
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "147",
+      "hex": "#E6ED4F",
+      "rgb": [
+        230,
+        237,
+        79
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "191",
+      "hex": "#26B78E",
+      "rgb": [
+        38,
+        183,
+        142
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "192",
+      "hex": "#CAEDCF",
+      "rgb": [
+        202,
+        237,
+        207
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "207",
+      "hex": "#176268",
+      "rgb": [
+        23,
+        98,
+        104
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "206",
+      "hex": "#0A4241",
+      "rgb": [
+        10,
+        66,
+        65
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "205",
+      "hex": "#343B1A",
+      "rgb": [
+        52,
+        59,
+        26
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "222",
+      "hex": "#E8FAA6",
+      "rgb": [
+        232,
+        250,
+        166
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "240",
+      "hex": "#4E846D",
+      "rgb": [
+        78,
+        132,
+        109
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "248",
+      "hex": "#907C35",
+      "rgb": [
+        144,
+        124,
+        53
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "262",
+      "hex": "#D0E0AF",
+      "rgb": [
+        208,
+        224,
+        175
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "269",
+      "hex": "#9EE5BB",
+      "rgb": [
+        158,
+        229,
+        187
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "268",
+      "hex": "#C6DF5F",
+      "rgb": [
+        198,
+        223,
+        95
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "285",
+      "hex": "#E3FBB1",
+      "rgb": [
+        227,
+        251,
+        177
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "286",
+      "hex": "#B2E694",
+      "rgb": [
+        178,
+        230,
+        148
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "287",
+      "hex": "#92AD60",
+      "rgb": [
+        146,
+        173,
+        96
+      ],
+      "group": "绿",
+      "source": "src1"
+    },
+    {
+      "code": "64",
+      "hex": "#F0FEE4",
+      "rgb": [
+        240,
+        254,
+        228
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "30",
+      "hex": "#ABF8FE",
+      "rgb": [
+        171,
+        248,
+        254
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "63",
+      "hex": "#9EE0F8",
+      "rgb": [
+        158,
+        224,
+        248
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "77",
+      "hex": "#44CDFB",
+      "rgb": [
+        68,
+        205,
+        251
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "34",
+      "hex": "#06ABE3",
+      "rgb": [
+        6,
+        171,
+        227
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "25",
+      "hex": "#54A7E9",
+      "rgb": [
+        84,
+        167,
+        233
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "9",
+      "hex": "#3977CC",
+      "rgb": [
+        57,
+        119,
+        204
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "52",
+      "hex": "#0F52BD",
+      "rgb": [
+        15,
+        82,
+        189
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "42",
+      "hex": "#3349C3",
+      "rgb": [
+        51,
+        73,
+        195
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "121",
+      "hex": "#3DBBE3",
+      "rgb": [
+        61,
+        187,
+        227
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "122",
+      "hex": "#2ADED3",
+      "rgb": [
+        42,
+        222,
+        211
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "120",
+      "hex": "#1E334E",
+      "rgb": [
+        30,
+        51,
+        78
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "140",
+      "hex": "#CDE7FE",
+      "rgb": [
+        205,
+        231,
+        254
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "139",
+      "hex": "#D6FDFC",
+      "rgb": [
+        214,
+        253,
+        252
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "143",
+      "hex": "#21C5C4",
+      "rgb": [
+        33,
+        197,
+        196
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "149",
+      "hex": "#1858A2",
+      "rgb": [
+        24,
+        88,
+        162
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "163",
+      "hex": "#02D1F3",
+      "rgb": [
+        2,
+        209,
+        243
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "196",
+      "hex": "#213244",
+      "rgb": [
+        33,
+        50,
+        68
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "202",
+      "hex": "#18869D",
+      "rgb": [
+        24,
+        134,
+        157
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "197",
+      "hex": "#1A70A9",
+      "rgb": [
+        26,
+        112,
+        169
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "212",
+      "hex": "#BEDDFC",
+      "rgb": [
+        190,
+        221,
+        252
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "239",
+      "hex": "#6BB1BB",
+      "rgb": [
+        107,
+        177,
+        187
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "263",
+      "hex": "#C8E2F9",
+      "rgb": [
+        200,
+        226,
+        249
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "267",
+      "hex": "#7EC5F9",
+      "rgb": [
+        126,
+        197,
+        249
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "271",
+      "hex": "#A9E8E0",
+      "rgb": [
+        169,
+        232,
+        224
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "265",
+      "hex": "#42ADD1",
+      "rgb": [
+        66,
+        173,
+        209
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "279",
+      "hex": "#D0DEF9",
+      "rgb": [
+        208,
+        222,
+        249
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "280",
+      "hex": "#BDCEE8",
+      "rgb": [
+        189,
+        206,
+        232
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "281",
+      "hex": "#364A89",
+      "rgb": [
+        54,
+        74,
+        137
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "46",
+      "hex": "#ACB7EF",
+      "rgb": [
+        172,
+        183,
+        239
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "36",
+      "hex": "#868DD3",
+      "rgb": [
+        134,
+        141,
+        211
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "8",
+      "hex": "#3653AF",
+      "rgb": [
+        54,
+        83,
+        175
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "75",
+      "hex": "#162C7E",
+      "rgb": [
+        22,
+        44,
+        126
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "32",
+      "hex": "#B34EC6",
+      "rgb": [
+        179,
+        78,
+        198
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "27",
+      "hex": "#B37BDC",
+      "rgb": [
+        179,
+        123,
+        220
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "7",
+      "hex": "#8758A9",
+      "rgb": [
+        135,
+        88,
+        169
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "94",
+      "hex": "#E3D2FE",
+      "rgb": [
+        227,
+        210,
+        254
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "93",
+      "hex": "#D6BAF5",
+      "rgb": [
+        214,
+        186,
+        245
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "92",
+      "hex": "#301A49",
+      "rgb": [
+        48,
+        26,
+        73
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "105",
+      "hex": "#BCBAE2",
+      "rgb": [
+        188,
+        186,
+        226
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "104",
+      "hex": "#DC99CE",
+      "rgb": [
+        220,
+        153,
+        206
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "103",
+      "hex": "#B5038F",
+      "rgb": [
+        181,
+        3,
+        143
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "102",
+      "hex": "#882893",
+      "rgb": [
+        136,
+        40,
+        147
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "101",
+      "hex": "#2F1E8E",
+      "rgb": [
+        47,
+        30,
+        142
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "118",
+      "hex": "#E2E4F0",
+      "rgb": [
+        226,
+        228,
+        240
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "119",
+      "hex": "#C7D3F9",
+      "rgb": [
+        199,
+        211,
+        249
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "124",
+      "hex": "#9A64B8",
+      "rgb": [
+        154,
+        100,
+        184
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "153",
+      "hex": "#D8C2D9",
+      "rgb": [
+        216,
+        194,
+        217
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "161",
+      "hex": "#9C34AD",
+      "rgb": [
+        156,
+        52,
+        173
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "162",
+      "hex": "#940595",
+      "rgb": [
+        148,
+        5,
+        149
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "198",
+      "hex": "#383995",
+      "rgb": [
+        56,
+        57,
+        149
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "217",
+      "hex": "#EADBF8",
+      "rgb": [
+        234,
+        219,
+        248
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "244",
+      "hex": "#768AE1",
+      "rgb": [
+        118,
+        138,
+        225
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "249",
+      "hex": "#4950C2",
+      "rgb": [
+        73,
+        80,
+        194
+      ],
+      "group": "青蓝",
+      "source": "src1"
+    },
+    {
+      "code": "273",
+      "hex": "#D6C6EB",
+      "rgb": [
+        214,
+        198,
+        235
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "18",
+      "hex": "#F6D4CB",
+      "rgb": [
+        246,
+        212,
+        203
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "38",
+      "hex": "#FCC1DD",
+      "rgb": [
+        252,
+        193,
+        221
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "62",
+      "hex": "#F6BDE8",
+      "rgb": [
+        246,
+        189,
+        232
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "6",
+      "hex": "#E9639E",
+      "rgb": [
+        233,
+        99,
+        158
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "40",
+      "hex": "#F1559F",
+      "rgb": [
+        241,
+        85,
+        159
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "20",
+      "hex": "#EC4072",
+      "rgb": [
+        236,
+        64,
+        114
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "41",
+      "hex": "#C63674",
+      "rgb": [
+        198,
+        54,
+        116
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "84",
+      "hex": "#FDDBE9",
+      "rgb": [
+        253,
+        219,
+        233
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "98",
+      "hex": "#E575C7",
+      "rgb": [
+        229,
+        117,
+        199
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "83",
+      "hex": "#D33997",
+      "rgb": [
+        211,
+        57,
+        151
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "125",
+      "hex": "#F7DAD4",
+      "rgb": [
+        247,
+        218,
+        212
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "126",
+      "hex": "#F893BF",
+      "rgb": [
+        248,
+        147,
+        191
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "127",
+      "hex": "#B5026A",
+      "rgb": [
+        181,
+        2,
+        106
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "137",
+      "hex": "#FAD4BF",
+      "rgb": [
+        250,
+        212,
+        191
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "135",
+      "hex": "#F5C9CA",
+      "rgb": [
+        245,
+        201,
+        202
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "221",
+      "hex": "#FBF4EC",
+      "rgb": [
+        251,
+        244,
+        236
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "220",
+      "hex": "#F7E3EC",
+      "rgb": [
+        247,
+        227,
+        236
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "210",
+      "hex": "#FBC8DB",
+      "rgb": [
+        251,
+        200,
+        219
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "215",
+      "hex": "#F6BBD1",
+      "rgb": [
+        246,
+        187,
+        209
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "241",
+      "hex": "#D7C6CE",
+      "rgb": [
+        215,
+        198,
+        206
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "253",
+      "hex": "#C09DA4",
+      "rgb": [
+        192,
+        157,
+        164
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "252",
+      "hex": "#B58B9F",
+      "rgb": [
+        181,
+        139,
+        159
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "250",
+      "hex": "#937D8A",
+      "rgb": [
+        147,
+        125,
+        138
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "282",
+      "hex": "#DEBEE5",
+      "rgb": [
+        222,
+        190,
+        229
+      ],
+      "group": "紫",
+      "source": "src1"
+    },
+    {
+      "code": "35",
+      "hex": "#FF9280",
+      "rgb": [
+        255,
+        146,
+        128
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "31",
+      "hex": "#F73D4B",
+      "rgb": [
+        247,
+        61,
+        75
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "53",
+      "hex": "#EF4D3E",
+      "rgb": [
+        239,
+        77,
+        62
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "54",
+      "hex": "#F92B40",
+      "rgb": [
+        249,
+        43,
+        64
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "5",
+      "hex": "#E30328",
+      "rgb": [
+        227,
+        3,
+        40
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "16",
+      "hex": "#913635",
+      "rgb": [
+        145,
+        54,
+        53
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "47",
+      "hex": "#911932",
+      "rgb": [
+        145,
+        25,
+        50
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "81",
+      "hex": "#BB0126",
+      "rgb": [
+        187,
+        1,
+        38
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "82",
+      "hex": "#E0677A",
+      "rgb": [
+        224,
+        103,
+        122
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "116",
+      "hex": "#874628",
+      "rgb": [
+        135,
+        70,
+        40
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "117",
+      "hex": "#592323",
+      "rgb": [
+        89,
+        35,
+        35
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "136",
+      "hex": "#F8516D",
+      "rgb": [
+        248,
+        81,
+        109
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "148",
+      "hex": "#F45C45",
+      "rgb": [
+        244,
+        92,
+        69
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "154",
+      "hex": "#FCADB2",
+      "rgb": [
+        252,
+        173,
+        178
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "204",
+      "hex": "#D50527",
+      "rgb": [
+        213,
+        5,
+        39
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "211",
+      "hex": "#F8C0A9",
+      "rgb": [
+        248,
+        192,
+        169
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "245",
+      "hex": "#E89B7D",
+      "rgb": [
+        232,
+        155,
+        125
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "246",
+      "hex": "#D07E4A",
+      "rgb": [
+        208,
+        126,
+        74
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "243",
+      "hex": "#BE454A",
+      "rgb": [
+        190,
+        69,
+        74
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "275",
+      "hex": "#C69495",
+      "rgb": [
+        198,
+        148,
+        149
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "266",
+      "hex": "#F2B8C6",
+      "rgb": [
+        242,
+        184,
+        198
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "272",
+      "hex": "#F7C3D0",
+      "rgb": [
+        247,
+        195,
+        208
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "264",
+      "hex": "#EC806D",
+      "rgb": [
+        236,
+        128,
+        109
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "283",
+      "hex": "#E09DAF",
+      "rgb": [
+        224,
+        157,
+        175
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "284",
+      "hex": "#E84854",
+      "rgb": [
+        232,
+        72,
+        84
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "76",
+      "hex": "#FFE4D3",
+      "rgb": [
+        255,
+        228,
+        211
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "49",
+      "hex": "#FCC6AC",
+      "rgb": [
+        252,
+        198,
+        172
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "80",
+      "hex": "#F1C4A5",
+      "rgb": [
+        241,
+        196,
+        165
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "19",
+      "hex": "#DCB387",
+      "rgb": [
+        220,
+        179,
+        135
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "43",
+      "hex": "#E7B34E",
+      "rgb": [
+        231,
+        179,
+        78
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "50",
+      "hex": "#E3A014",
+      "rgb": [
+        227,
+        160,
+        20
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "17",
+      "hex": "#985C3A",
+      "rgb": [
+        152,
+        92,
+        58
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "12",
+      "hex": "#713D2F",
+      "rgb": [
+        113,
+        61,
+        47
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "91",
+      "hex": "#E4B685",
+      "rgb": [
+        228,
+        182,
+        133
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "87",
+      "hex": "#DA8C42",
+      "rgb": [
+        218,
+        140,
+        66
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "112",
+      "hex": "#DAC898",
+      "rgb": [
+        218,
+        200,
+        152
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "113",
+      "hex": "#FEC993",
+      "rgb": [
+        254,
+        201,
+        147
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "115",
+      "hex": "#B2714B",
+      "rgb": [
+        178,
+        113,
+        75
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "114",
+      "hex": "#8B684C",
+      "rgb": [
+        139,
+        104,
+        76
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "133",
+      "hex": "#F6F8E3",
+      "rgb": [
+        246,
+        248,
+        227
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "134",
+      "hex": "#F2D8C1",
+      "rgb": [
+        242,
+        216,
+        193
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "144",
+      "hex": "#79544E",
+      "rgb": [
+        121,
+        84,
+        78
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "203",
+      "hex": "#FFE4D6",
+      "rgb": [
+        255,
+        228,
+        214
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "208",
+      "hex": "#DD7D41",
+      "rgb": [
+        221,
+        125,
+        65
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "199",
+      "hex": "#A5452F",
+      "rgb": [
+        165,
+        69,
+        47
+      ],
+      "group": "红粉",
+      "source": "src1"
+    },
+    {
+      "code": "247",
+      "hex": "#B38561",
+      "rgb": [
+        179,
+        133,
+        97
+      ],
+      "group": "橙棕",
+      "source": "src1"
+    },
+    {
+      "code": "15",
+      "hex": "#FBFBFB",
+      "rgb": [
+        251,
+        251,
+        251
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "1",
+      "hex": "#000000",
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "13",
+      "hex": "#B4B4B4",
+      "rgb": [
+        180,
+        180,
+        180
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "78",
+      "hex": "#878787",
+      "rgb": [
+        135,
+        135,
+        135
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "45",
+      "hex": "#464648",
+      "rgb": [
+        70,
+        70,
+        72
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "51",
+      "hex": "#2C2C2C",
+      "rgb": [
+        44,
+        44,
+        44
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "14",
+      "hex": "#010101",
+      "rgb": [
+        1,
+        1,
+        1
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "85",
+      "hex": "#E7D6DC",
+      "rgb": [
+        231,
+        214,
+        220
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "95",
+      "hex": "#EFEDEE",
+      "rgb": [
+        239,
+        237,
+        238
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "86",
+      "hex": "#ECEAEB",
+      "rgb": [
+        236,
+        234,
+        235
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "123",
+      "hex": "#CDCDCD",
+      "rgb": [
+        205,
+        205,
+        205
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "132",
+      "hex": "#FDF6EE",
+      "rgb": [
+        253,
+        246,
+        238
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "145",
+      "hex": "#F4EFD1",
+      "rgb": [
+        244,
+        239,
+        209
+      ],
+      "group": "黄",
+      "source": "src1"
+    },
+    {
+      "code": "146",
+      "hex": "#CED7D4",
+      "rgb": [
+        206,
+        215,
+        212
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "201",
+      "hex": "#98A6A6",
+      "rgb": [
+        152,
+        166,
+        166
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "200",
+      "hex": "#1B1213",
+      "rgb": [
+        27,
+        18,
+        19
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "214",
+      "hex": "#F0EEEF",
+      "rgb": [
+        240,
+        238,
+        239
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "219",
+      "hex": "#FCFFF8",
+      "rgb": [
+        252,
+        255,
+        248
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "209",
+      "hex": "#F2EEE5",
+      "rgb": [
+        242,
+        238,
+        229
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "251",
+      "hex": "#96A09F",
+      "rgb": [
+        150,
+        160,
+        159
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "291",
+      "hex": "#F8FBE6",
+      "rgb": [
+        248,
+        251,
+        230
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "277",
+      "hex": "#CACAD2",
+      "rgb": [
+        202,
+        202,
+        210
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    },
+    {
+      "code": "278",
+      "hex": "#9B9C94",
+      "rgb": [
+        155,
+        156,
+        148
+      ],
+      "group": "灰白黑",
+      "source": "src1"
+    }
+  ]
+}

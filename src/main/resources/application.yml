@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Agent
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.siliconflow.cn/v1
+      chat:
+        model: Qwen/Qwen3.5-35B-A3B
+      image:
+        model: Tongyi-MAI/Z-Image-Turbo
+      audio:
+        speech:
+          model: "FunAudioLLM/CosyVoice2-0.5B"
+          voice: "FunAudioLLM/CosyVoice2-0.5B:alex"
+
+# 高德地图配置
+gaode:
+  key: ${GAODE_KEY}

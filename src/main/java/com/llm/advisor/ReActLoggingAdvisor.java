@@ -1,6 +1,7 @@
 package com.llm.advisor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
 import org.springframework.ai.chat.client.advisor.api.CallAdvisor;
@@ -19,8 +20,9 @@ public class ReActLoggingAdvisor implements CallAdvisor {
 
     private final AtomicInteger stepCounter = new AtomicInteger(0);
 
+    @NotNull
     @Override
-    public ChatClientResponse adviseCall(ChatClientRequest request, CallAdvisorChain chain) {
+    public ChatClientResponse adviseCall(@NotNull ChatClientRequest request, CallAdvisorChain chain) {
         ChatClientResponse response = chain.nextCall(request);
         logStep(request, response);
         return response;
@@ -32,14 +34,13 @@ public class ReActLoggingAdvisor implements CallAdvisor {
         if (cr == null || cr.getResult() == null) return;
 
         AssistantMessage output = cr.getResult().getOutput();
-        if (output == null) return;
 
         List<ToolCall> toolCalls = output.getToolCalls();
         String text = output.getText();
 
         StringBuilder sb = new StringBuilder("[ReAct] Step ").append(step).append(" | ");
 
-        if (toolCalls != null && !toolCalls.isEmpty()) {
+        if (!toolCalls.isEmpty()) {
             for (ToolCall tc : toolCalls) {
                 sb.append("→ ").append(tc.name()).append("(").append(abbrev(tc.arguments(), 40)).append(")");
             }
@@ -59,13 +60,15 @@ public class ReActLoggingAdvisor implements CallAdvisor {
         for (int i = messages.size() - 1; i >= 0; i--) {
             if (messages.get(i) instanceof ToolResponseMessage trm) {
                 if (!trm.getResponses().isEmpty()) {
-                    return trm.getResponses().get(0).responseData();
+                    // 使用了 Java 现代特性的 getFirst()
+                    return trm.getResponses().getFirst().responseData();
                 }
             }
         }
         return null;
     }
 
+    @NotNull
     @Override
     public String getName() {
         return "react-logging";

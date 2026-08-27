@@ -1,0 +1,10 @@
+# IDE
+.idea/
+*.iml
+
+# WorkBuddy workspace memory (project notes, not for public repo)
+.workbuddy/
+
+# OS
+Thumbs.db
+Desktop.ini

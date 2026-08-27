@@ -56,6 +56,7 @@ public class ChatClientConfig {
                         3. 回复格式："https://+平台返回的完整图片URL"
                         4.当用户明确告知‘我在某地’、‘把位置设置为某地’或提供具体地址时，必须调用setCurrentLocation工具
                         5.当用户询问本地天气且未说城市时，必须调用getLocalWeather工具
+                        6.当用户提出翻译需求时，必须调用 translate 工具
                        """)
                 .build();
     }

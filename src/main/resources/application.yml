@@ -3,7 +3,7 @@ spring:
     name: Agent
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY}
+      api-key: ${SILICONFLOW_API_KEY:}
       base-url: https://api.siliconflow.cn/v1
       chat:
         model: Qwen/Qwen3.5-35B-A3B
@@ -13,11 +13,25 @@ spring:
         speech:
           model: "FunAudioLLM/CosyVoice2-0.5B"
           voice: "FunAudioLLM/CosyVoice2-0.5B:alex"
+  # 数据库配置
+  datasource:
+    url: jdbc:sqlite:${YKD_WORK_DIR:./work}/sqlite/conversation.db
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
+  sql:
+    init:
+      mode: never
 
-# 高德地图配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
 gaode:
-  key: ${GAODE_KEY}
+  key: ${GAODE_KEY:}
+  js-key: ${GAODE_JS_KEY:}
 
-tencent:
-  map:
-    key: ${TENCENT_KEY}
+#  RAG 配置
+rag:
+  enabled: true
+  top-k: 3

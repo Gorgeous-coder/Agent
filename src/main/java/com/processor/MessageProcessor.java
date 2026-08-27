@@ -15,6 +15,10 @@ import com.llm.service.LlmService;
 import com.llm.tools.ImageAnalysisTool;
 import com.llm.tools.ImageTools;
 
+import com.skill.selector.SkillSelector;
+import com.skill.selector.SkillSelectionResult;
+import com.skill.session.SkillSessionManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,22 +38,40 @@ public class MessageProcessor {
             .readTimeout(60, TimeUnit.SECONDS)
             .build();
 
+<<<<<<< Updated upstream
+=======
+    private final TranslatorTools translatorTools;
+>>>>>>> Stashed changes
     private final LlmService llmService;
     private final ChatClient deepseekClient;
     private final ImageAnalysisTool imageAnalysisTool;
     private final UserContext userContext;
     private final Queue<ProcessResult> voiceQueue;
 
+    // 注入技能选择器和会话管理器
+    private final SkillSelector skillSelector;
+    private final SkillSessionManager skillSessionManager;
+
     public MessageProcessor(LlmService llmService,
                             ChatClient deepseekClient,
                             ImageAnalysisTool imageAnalysisTool,
                             UserContext userContext,
+<<<<<<< Updated upstream
                             Queue<ProcessResult> voiceQueue) {
+=======
+                            Queue<ProcessResult> voiceQueue,
+                            TranslatorTools translatorTools,
+                            SkillSelector skillSelector,
+                            SkillSessionManager skillSessionManager) {
+        this.translatorTools = translatorTools;
+>>>>>>> Stashed changes
         this.llmService = llmService;
         this.deepseekClient = deepseekClient;
         this.imageAnalysisTool = imageAnalysisTool;
         this.userContext = userContext;
         this.voiceQueue = voiceQueue;
+        this.skillSelector = skillSelector;
+        this.skillSessionManager = skillSessionManager;
     }
 
     /**
@@ -87,6 +109,27 @@ public class MessageProcessor {
         // 2. 在用户上下文中通过 AI 处理请求
         userContext.executeAs(fromUserId, () -> {
             try {
+                if (finalText != null && !finalText.isBlank()) {
+                    if (finalText.contains("退出方言模式") || finalText.contains("退出方言助手") || finalText.contains("关闭方言模式")) {
+                        llmService.exitSkill(fromUserId);
+                        result[0] = ProcessResult.text("已退出方言助手模式，已回到标准普通话对话。", fromUserId);
+                        return;
+                    }
+
+                    if (skillSessionManager.get(fromUserId) == null) {
+                        SkillSelectionResult selectionResult = skillSelector.select(finalText);
+                        if (selectionResult.isActivate()) {
+                            String skillName = selectionResult.skill().name();
+                            skillSessionManager.activate(fromUserId, skillName);
+                            log.info("[Processor] 用户触发并激活技能: userId={}, skill={}", fromUserId, skillName);
+                        } else if (selectionResult.isConfirm()) {
+                            skillSessionManager.setPending(fromUserId, selectionResult.skill().name());
+                            result[0] = ProcessResult.text("检测到您可能需要方言语音助手服务，请回复“确认”开启。", fromUserId);
+                            return;
+                        }
+                    }
+                }
+
                 String reply;
                 if (!imageBytesList.isEmpty()) {
                     byte[] imageBytes = imageBytesList.getFirst();
@@ -95,21 +138,18 @@ public class MessageProcessor {
                     log.info("[Processor] 触发图片直连分析: userId={}, prompt={}", fromUserId, prompt);
                     reply = imageAnalysisTool.analyzeImage(prompt, imageBytes);
                 } else {
-                    // 纯文本对话
                     reply = llmService.chat(finalText, List.of(), deepseekClient, fromUserId);
                 }
 
                 long elapsed = System.currentTimeMillis() - start;
                 log.info("[Processor] 处理成功: elapsed={}ms, userId={}", elapsed, fromUserId);
 
-                // 3. 检查是否有语音播报结果
                 ProcessResult voiceResult = voiceQueue.poll();
                 if (voiceResult != null) {
                     result[0] = voiceResult;
                     return;
                 }
 
-                // 4. 直接检查 ImageTools 内存中是否暂存了生成的图片 URL
                 String cachedUrl = ImageTools.lastGeneratedImageUrl;
                 if (cachedUrl != null) {
                     ImageTools.lastGeneratedImageUrl = null; // 用完即清空
@@ -117,14 +157,12 @@ public class MessageProcessor {
                     log.info("[Processor] 检测到新生成的图片 URL，直接下载并转为图片消息返回: {}", cachedUrl);
                     byte[] imageData = downloadImage(cachedUrl);
                     if (imageData != null) {
-                        // 直接返回图片格式，机器人会直接展示图片而不是链接
                         result[0] = ProcessResult.image(imageData, fromUserId);
                         return;
                     }
                     log.warn("[Processor] 图片下载失败，降级发送文字提示: userId={}", fromUserId);
                 }
 
-                // 5. 默认返回文本
                 result[0] = ProcessResult.text(reply, fromUserId);
 
             } catch (Exception e) {
@@ -175,9 +213,6 @@ public class MessageProcessor {
         return imageBytesList;
     }
 
-    /**
-     * 纯净下载逻辑
-     */
     private byte[] downloadImage(String imageUrl) {
         String cleanUrl = imageUrl != null ? imageUrl.trim() : "";
         if (cleanUrl.isEmpty()) {

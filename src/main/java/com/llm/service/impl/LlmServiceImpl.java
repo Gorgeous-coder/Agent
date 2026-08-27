@@ -3,10 +3,16 @@ package com.llm.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.content.Media;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import com.llm.service.LlmService;
 import com.llm.tools.*;
+import com.rag.tool.DialectAssistantTools;
+import com.skill.registry.SkillRegistry;
+import com.skill.tool.SkillToolResolver;
+import com.skill.session.SkillSessionManager;
+import com.skill.model.SkillDefinition;
 
 import java.net.URI;
 import java.util.List;
@@ -16,22 +22,46 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class LlmServiceImpl implements LlmService {
 
+    // 1. 所有的通用工具
     private final WeatherTools weatherTools;
     private final ImageTools imageTools;
     private final VoiceTools voiceTools;
     private final LocationTools locationTools;
+<<<<<<< Updated upstream
+=======
+    private final TranslatorTools translatorTools;
+>>>>>>> Stashed changes
     private final ImageAnalysisTool imageAnalysisTool;
+
+    private final SkillRegistry skillRegistry;
+    private final SkillToolResolver skillToolResolver;
+    private final SkillSessionManager skillSessionManager;
 
     public LlmServiceImpl(WeatherTools weatherTools,
                           ImageTools imageTools,
                           VoiceTools voiceTools,
                           LocationTools locationTools,
+<<<<<<< Updated upstream
                           ImageAnalysisTool imageAnalysisTool) {
+=======
+                          TranslatorTools translatorTools,
+                          ImageAnalysisTool imageAnalysisTool,
+                          SkillRegistry skillRegistry,
+                          SkillToolResolver skillToolResolver,
+                          SkillSessionManager skillSessionManager) {
+>>>>>>> Stashed changes
         this.weatherTools = weatherTools;
         this.imageTools = imageTools;
         this.voiceTools = voiceTools;
         this.locationTools = locationTools;
+<<<<<<< Updated upstream
+=======
+        this.translatorTools = translatorTools;
+>>>>>>> Stashed changes
         this.imageAnalysisTool = imageAnalysisTool;
+        this.skillRegistry = skillRegistry;
+        this.skillToolResolver = skillToolResolver;
+        this.skillSessionManager = skillSessionManager;
     }
 
     @Override
@@ -55,9 +85,22 @@ public class LlmServiceImpl implements LlmService {
             finalText = "请描述这些图片";
         }
 
-        log.info("[LLM-Core] 开始处理: text={}", finalText);
+        log.info("[LLM-Core] 开始处理: userId={}, text={}", userId, finalText);
 
         try {
+            // 2. 动态获取当前用户激活的 Skill 工具
+            ToolCallback[] dynamicTools = new ToolCallback[0];
+            if (skillEnabled) {
+                SkillSessionManager.SkillSession session = skillSessionManager.get(userId);
+                if (session != null) {
+                    SkillDefinition skill = skillRegistry.findEnabledByName(session.skillName()).orElse(null);
+                    if (skill != null) {
+                        dynamicTools = skillToolResolver.resolve(skill);
+                        log.info("[LLM-Core] 当前用户已激活技能: {}, 动态加载工具数: {}", skill.name(), dynamicTools.length);
+                    }
+                }
+            }
+
             String promptText = finalText;
             var chatResponse = client.prompt()
                     .user(userSpec -> {
@@ -70,8 +113,13 @@ public class LlmServiceImpl implements LlmService {
                             }
                         }
                     })
+<<<<<<< Updated upstream
                     // 3. 把所有工具全部注册进去
                     .tools(weatherTools, imageTools, voiceTools, locationTools, imageAnalysisTool)
+=======
+                    .tools(weatherTools, imageTools, locationTools, translatorTools, imageAnalysisTool, voiceTools)
+                    .tools(dynamicTools)
+>>>>>>> Stashed changes
                     .call()
                     .chatResponse();
 
@@ -91,6 +139,8 @@ public class LlmServiceImpl implements LlmService {
 
     @Override
     public boolean exitSkill(String userId) {
+        skillSessionManager.remove(userId);
+        log.info("[LLM-Core] 用户已退出当前技能模式: userId={}", userId);
         return true;
     }
 }

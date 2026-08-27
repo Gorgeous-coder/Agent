@@ -7,6 +7,7 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Component;
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
+import com.location.dto.TransitRouteResult;
 import com.location.model.UserLocation;
 import com.location.service.UserLocationService;
 import com.processor.UserContext;
@@ -117,7 +118,7 @@ public class LocationTools {
         }
     }
 
-    @Tool(description = "从用户保存的当前位置出发，规划到指定目的地的步行或驾车路线")
+    @Tool(description = "从用户当前位置到目的地规划步行或驾车路线，仅适用于同一城市内的短途出行；若目的地是其他城市或距离较远、需要坐高铁/火车/地铁/公交时，请改用 planTransitRoute 工具")
     public String planRouteFromCurrentLocation(
             @ToolParam(description = "目的地，例如：杭州东站、西湖断桥")
             String destination,
@@ -157,8 +158,87 @@ public class LocationTools {
             return answer.toString().trim();
         } catch (Exception e) {
             log.warn("[LocationTools] 路线规划失败: destination={}, error={}", destination, e.getMessage());
+            if (e.getMessage() != null && e.getMessage().contains("OVER_DIRECTION_RANGE")) {
+                return "❌ 目的地距离过远，步行/驾车无法直达。请改用 planTransitRoute 工具规划公交/地铁/高铁路线。";
+            }
             return "❌ 路线规划失败：" + e.getMessage();
         }
+    }
+
+    @Tool(description = "规划从用户当前位置到目的地的公共交通综合路线（公交/地铁/高铁/火车），适用于跨城市出行或长途出行，例如去外地、去火车站、目的地距离较远时使用")
+    public String planTransitRoute(
+            @ToolParam(description = "目的地，例如：北京站、杭州东站、西湖景区")
+            String destination,
+            @ToolParam(
+                    description = "换乘策略：synthesis=综合推荐(默认)，economy=最经济，leastTransfer=少换乘，leastWalk=少步行，metroFirst=地铁优先，fastest=时间短；用户未指定时传synthesis",
+                    required = false
+            )
+            String preference
+    ) {
+        try {
+            int strategy = normalizeStrategy(preference);
+            TransitRouteResult result = userLocationService.planTransitRoute(
+                    currentUserId(),
+                    destination,
+                    strategy
+            );
+
+            StringBuilder answer = new StringBuilder();//可变字符串构建器，用来逐步拼接最终要返回给模型的文本
+            answer.append("从当前位置到").append(destination)
+                    .append("的公共交通路线：\n");
+
+            //控制最多只展示 3 个方案，防止返回给模型的内容太长。
+            int planCount = Math.min(result.plans().size(), 3);
+            for (int i = 0; i < planCount; i++) {
+                TransitRouteResult.TransitPlan plan = result.plans().get(i);
+                answer.append("方案").append(i + 1).append("：")
+                        .append(formatDuration(plan.durationSeconds()))
+                        .append("，约")
+                        .append(formatDistance(plan.distanceMeters()));
+                if (plan.transitFeeYuan() > 0) {
+                    answer.append("，票价约")
+                            .append(plan.transitFeeYuan())
+                            .append("元");
+                }
+                answer.append('\n');
+                for (TransitRouteResult.Segment segment : plan.segments()) {
+                    answer.append("  ├─ ");
+                    switch (segment.type()) {
+                        case "walking" -> answer.append(segment.detail());
+                        case "bus" -> answer.append(segment.name())
+                                .append("：")
+                                .append(segment.detail());
+                        case "railway" -> answer.append(segment.name())
+                                .append(" ")
+                                .append(segment.detail());
+                        default -> answer.append(segment.name())
+                                .append(" ")
+                                .append(segment.detail());
+                    }
+                    answer.append('\n');
+                }
+            }
+            return answer.toString().trim();
+        } catch (Exception e) {
+            log.warn("[LocationTools] 公共交通路线规划失败: destination={}, error={}",
+                    destination, e.getMessage());
+            return "❌ 公共交通路线规划失败：" + e.getMessage();
+        }
+    }
+
+    //把模型传的"人类语言策略"（preference）翻译成高德接口能识别的数字代号（strategy
+    private int normalizeStrategy(String preference) {
+        if (preference == null || preference.isBlank()) {
+            return 0;
+        }
+        return switch (preference.trim().toLowerCase()) {
+            case "economy" -> 1;
+            case "leasttransfer" -> 2;
+            case "leastwalk" -> 3;
+            case "metrofirst" -> 7;
+            case "fastest" -> 8;
+            default -> 0;
+        };
     }
 
     private String currentUserId() {

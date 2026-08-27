@@ -64,15 +64,22 @@ public class XhsCollector implements AutoCloseable {
     }
 
     /**
-     * 实时搜索小红书，只返回第一条（高热度）笔记的链接（已转 xhslink 短链）。
+     * 实时搜索小红书，只返回第一条（高热度）笔记的可打开链接。
      * 用于在 Agent 综合回答末尾追加"参考链接"，一次只给 1 条。
      *
-     * @param keyword 搜索关键词（如 "南京 旅游攻略"、"南京 穿搭"）
-     * @return 第一条笔记的 xhslink 链接；失败抛 IOException
+     * @param keyword 搜索关键词（如 "南京 旅游攻略"、"南京 穿搭攻略"）
+     * @return 第一条笔记的链接（优先真实 xhslink 短链，其次规范长链）；失败抛 IOException
      */
     public String searchTopNote(String keyword) throws IOException {
         String kw = keyword == null ? "" : keyword.trim();
         List<Note> notes = searchNotes(kw);
+        // 优先返回带真实 xhslink 短链的笔记（微信内可点、App 可打开）；
+        // 短链生成失败时退回到第一条的规范长链（App/浏览器可打开）。
+        for (Note n : notes) {
+            if (n.url != null && n.url.contains("xhslink.com")) {
+                return n.url;
+            }
+        }
         Note first = notes.get(0);
         return (first.url == null || first.url.isEmpty()) ? "" : first.url;
     }
@@ -232,10 +239,15 @@ public class XhsCollector implements AutoCloseable {
                 note.title = title;
                 note.author = n.path("author").asText("").trim();
                 note.likes = n.path("likes").asText("").trim();
-                // 把 search_result/explore 长链转成 xhslink 短链：微信里点长链一律"页面不见"，
-                // xhslink 走微信 OAuth（至少能进小红书，不被屏蔽），未授权回首页，已授权 iOS/Android
-                // 会弹"在 App 打开"，覆盖绝大多数用户场景。
-                note.url = toXhsShortLink(url);
+                // 链接优先级：
+                // ① 脚本实时生成的官方 xhslink 短链（微信内可点、App 可打开）；
+                // ② 无短链时把 search_result/explore 长链改写为 discovery/item 规范长链
+                //    （保留 xsec_token，App/浏览器可直接打开）；
+                // ③ 都失败则原样保留。
+                // ❗ 旧逻辑曾在 Java 端把长链"改写成" http://xhslink.com/o/<id>，
+                //    该路径在 xhslink 上不存在 → 微信点击跳到首页、App 提示链接失效。
+                String shortlink = n.path("shortlink").asText("").trim();
+                note.url = !shortlink.isEmpty() ? shortlink : toCanonicalUrl(url);
                 note.content = n.path("content").asText("").trim();
                 result.add(note);
             }
@@ -266,36 +278,36 @@ public class XhsCollector implements AutoCloseable {
                 sb.append("   📝 （这篇没能抓到正文摘要，只给你标题和链接）\n");
             }
             if (n.url != null && !n.url.isEmpty()) {
-                // url 已经在 parseNotes 里转成 xhslink 短链（在微信里能走 OAuth）
+                // url 已在 parseNotes 里换成：官方短链（优先）或规范长链（兜底）
                 sb.append("   🔗 ").append(n.url).append('\n');
             }
             sb.append('\n');
         }
         // 文案重点：让用户知道"上面的 📝 正文摘要 + 👤 作者"已经够用，
-        // 链接是 bonus（小红书 App/已绑定微信账号才能看）；教用户怎么在 App 里搜到原帖。
-        sb.append("💡 微信里点不开是正常的（小红书对未登录用户一律「页面不见」）。想看完整原帖有 2 个办法：\n");
-        sb.append("   ① 复制上方「标题 + 作者」→ 打开小红书 App → 搜索 → 找到原帖\n");
-        sb.append("   ② 复制「🔗 链接」到手机浏览器打开（需已登录小红书）\n");
+        // 链接是 bonus。xhslink 短链在微信/App 都能打开；长链（xiaohongshu.com）
+        // 在微信里会被小红书拦截（页面不见），需复制到 App 或手机浏览器打开。
+        sb.append("💡 链接说明：开头 xhslink.com 的是官方短链，微信里可直接点、App 能打开；\n");
+        sb.append("   其余 xiaohongshu.com 长链请复制到小红书 App 或手机浏览器打开（微信内会提示「页面不见」）。\n");
         sb.append("   📝 上面每篇都给了 500 字正文摘要 + 店铺/地址/玩法等关键信息，其实不点链接也能读全。");
         return sb.toString().trim();
     }
 
     /**
-     * 把小红书长链转成 xhslink 短链（避免微信内置浏览器"页面不见"）。
-     * <p>支持 search_result 与 explore 两种 URL。提取 24 位 hex note_id 拼成
-     * <code>http://xhslink.com/o/&lt;id&gt;</code>。
-     * <p>若 URL 已经是 xhslink 短链或解析不到 note_id，原样返回（让 Java 端兜底显示）。
+     * 把脚本返回的长链改写为规范可打开链接（不是伪造短链！）。
+     * <p>search_result/explore 长链 → discovery/item/&lt;note_id&gt;（保留全部 query 参数，
+     * 含 xsec_token；App/浏览器可直接打开该笔记）。已是 xhslink 短链或改写不动则原样返回。
      */
-    private static String toXhsShortLink(String url) {
+    private static String toCanonicalUrl(String url) {
         if (url == null || url.isEmpty()) return url;
+        // 已是真实短链（脚本生成的 xhslink.com/a/xxx）→ 直接用
+        if (url.contains("xhslink.com")) return url;
         try {
-            // search_result/<id>?... 或 explore/<id>?... 都提取中间那段 24 位 hex
-            java.util.regex.Matcher m = java.util.regex.Pattern.compile(
-                    "(?:search_result|explore)/([0-9a-f]{20,})").matcher(url);
-            if (m.find()) {
-                return "http://xhslink.com/o/" + m.group(1);
-            }
+            // search_result/<id>?... 或 explore/<id>?... → discovery/item/<id>?...
+            // 只改路径段，query（xsec_token / xsec_source 等）原样保留
+            String canonical = url.replaceFirst(
+                    "/(search_result|explore)/", "/discovery/item/");
+            return canonical;
         } catch (Exception ignore) { }
-        return url; // 兜底：原样返回，至少在小红书 App/已登录浏览器里能用
+        return url; // 兜底：原样返回
     }
 }

@@ -5,17 +5,34 @@ tools/
 # Build output
 target/
 out/
+build/
 *.class
 *.jar
+*.war
+*.zip
 
 # IDE
 .idea/
 *.iml
+.vscode/
 
 # Debug / runtime data
 dbg_de/
+dbg_detest-classes/
 dbg_trace/
 dbg_voice/
+logs/
+*.log
+*.err
+*.silk
+*.wav
+*.mp3
+
+# Python
+__pycache__/
+*.pyc
+
+# Local runtime data
 redbook_data/
 rss-feeds.properties
 voice_profile.json
@@ -25,3 +42,4 @@ reminders.json
 # Sensitive config (cookie / api-key) - NEVER commit
 ai-bot.properties
 *.local.properties
+.env

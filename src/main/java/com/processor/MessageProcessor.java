@@ -38,17 +38,12 @@ public class MessageProcessor {
             .readTimeout(60, TimeUnit.SECONDS)
             .build();
 
-<<<<<<< Updated upstream
-=======
-    private final TranslatorTools translatorTools;
->>>>>>> Stashed changes
     private final LlmService llmService;
     private final ChatClient deepseekClient;
     private final ImageAnalysisTool imageAnalysisTool;
     private final UserContext userContext;
     private final Queue<ProcessResult> voiceQueue;
 
-    // 注入技能选择器和会话管理器
     private final SkillSelector skillSelector;
     private final SkillSessionManager skillSessionManager;
 
@@ -56,15 +51,9 @@ public class MessageProcessor {
                             ChatClient deepseekClient,
                             ImageAnalysisTool imageAnalysisTool,
                             UserContext userContext,
-<<<<<<< Updated upstream
-                            Queue<ProcessResult> voiceQueue) {
-=======
                             Queue<ProcessResult> voiceQueue,
-                            TranslatorTools translatorTools,
                             SkillSelector skillSelector,
                             SkillSessionManager skillSessionManager) {
-        this.translatorTools = translatorTools;
->>>>>>> Stashed changes
         this.llmService = llmService;
         this.deepseekClient = deepseekClient;
         this.imageAnalysisTool = imageAnalysisTool;
@@ -86,10 +75,8 @@ public class MessageProcessor {
             return null;
         }
 
-        // 每次处理新消息前，先清理旧的图片缓存
         ImageTools.lastGeneratedImageUrl = null;
 
-        // 1. 提取文本、语音识别文字和图片的字节数组
         String text = extractText(msg);
         String voiceText = extractVoiceText(msg);
         List<byte[]> imageBytesList = extractImageBytes(msg, client);
@@ -106,7 +93,6 @@ public class MessageProcessor {
         var result = new ProcessResult[1];
         String finalText = text;
 
-        // 2. 在用户上下文中通过 AI 处理请求
         userContext.executeAs(fromUserId, () -> {
             try {
                 if (finalText != null && !finalText.isBlank()) {
@@ -124,7 +110,7 @@ public class MessageProcessor {
                             log.info("[Processor] 用户触发并激活技能: userId={}, skill={}", fromUserId, skillName);
                         } else if (selectionResult.isConfirm()) {
                             skillSessionManager.setPending(fromUserId, selectionResult.skill().name());
-                            result[0] = ProcessResult.text("检测到您可能需要方言语音助手服务，请回复“确认”开启。", fromUserId);
+                            result[0] = ProcessResult.text("检测到您可能需要方言语音助手服务，请回复\"确认\"开启。", fromUserId);
                             return;
                         }
                     }
@@ -152,7 +138,7 @@ public class MessageProcessor {
 
                 String cachedUrl = ImageTools.lastGeneratedImageUrl;
                 if (cachedUrl != null) {
-                    ImageTools.lastGeneratedImageUrl = null; // 用完即清空
+                    ImageTools.lastGeneratedImageUrl = null;
 
                     log.info("[Processor] 检测到新生成的图片 URL，直接下载并转为图片消息返回: {}", cachedUrl);
                     byte[] imageData = downloadImage(cachedUrl);

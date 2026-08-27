@@ -22,16 +22,12 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class LlmServiceImpl implements LlmService {
 
-    // 1. 所有的通用工具
     private final WeatherTools weatherTools;
     private final ImageTools imageTools;
     private final VoiceTools voiceTools;
     private final LocationTools locationTools;
-<<<<<<< Updated upstream
-=======
-    private final TranslatorTools translatorTools;
->>>>>>> Stashed changes
     private final ImageAnalysisTool imageAnalysisTool;
+    private final WebSearchTools webSearchTools;
 
     private final SkillRegistry skillRegistry;
     private final SkillToolResolver skillToolResolver;
@@ -41,24 +37,17 @@ public class LlmServiceImpl implements LlmService {
                           ImageTools imageTools,
                           VoiceTools voiceTools,
                           LocationTools locationTools,
-<<<<<<< Updated upstream
-                          ImageAnalysisTool imageAnalysisTool) {
-=======
-                          TranslatorTools translatorTools,
                           ImageAnalysisTool imageAnalysisTool,
+                          WebSearchTools webSearchTools,
                           SkillRegistry skillRegistry,
                           SkillToolResolver skillToolResolver,
                           SkillSessionManager skillSessionManager) {
->>>>>>> Stashed changes
         this.weatherTools = weatherTools;
         this.imageTools = imageTools;
         this.voiceTools = voiceTools;
         this.locationTools = locationTools;
-<<<<<<< Updated upstream
-=======
-        this.translatorTools = translatorTools;
->>>>>>> Stashed changes
         this.imageAnalysisTool = imageAnalysisTool;
+        this.webSearchTools = webSearchTools;
         this.skillRegistry = skillRegistry;
         this.skillToolResolver = skillToolResolver;
         this.skillSessionManager = skillSessionManager;
@@ -88,7 +77,6 @@ public class LlmServiceImpl implements LlmService {
         log.info("[LLM-Core] 开始处理: userId={}, text={}", userId, finalText);
 
         try {
-            // 2. 动态获取当前用户激活的 Skill 工具
             ToolCallback[] dynamicTools = new ToolCallback[0];
             if (skillEnabled) {
                 SkillSessionManager.SkillSession session = skillSessionManager.get(userId);
@@ -113,13 +101,8 @@ public class LlmServiceImpl implements LlmService {
                             }
                         }
                     })
-<<<<<<< Updated upstream
-                    // 3. 把所有工具全部注册进去
-                    .tools(weatherTools, imageTools, voiceTools, locationTools, imageAnalysisTool)
-=======
-                    .tools(weatherTools, imageTools, locationTools, translatorTools, imageAnalysisTool, voiceTools)
+                    .tools(weatherTools, imageTools, locationTools, imageAnalysisTool, voiceTools, webSearchTools)
                     .tools(dynamicTools)
->>>>>>> Stashed changes
                     .call()
                     .chatResponse();
 

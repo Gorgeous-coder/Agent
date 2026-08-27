@@ -35,3 +35,11 @@ gaode:
 rag:
   enabled: true
   top-k: 3
+
+#  联网搜索配置
+web-search:
+  enabled: true
+  api-key: ${SERPAPI_KEY:}
+  engine: google
+  max-results: 5
+  timeout-seconds: 15

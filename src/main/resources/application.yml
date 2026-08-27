@@ -14,5 +14,20 @@ spring:
           model: "FunAudioLLM/CosyVoice2-0.5B"
           voice: "FunAudioLLM/CosyVoice2-0.5B:alex"
 
+  # ========== 新增：数据库配置 ==========
+  datasource:
+    url: jdbc:sqlite:${YKD_WORK_DIR:./work}/sqlite/conversation.db
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
+  sql:
+    init:
+      mode: never
+
+# ========== 新增：MyBatis 配置 ==========
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
 gaode:
   key: ${GAODE_KEY:}

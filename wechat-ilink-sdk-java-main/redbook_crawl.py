@@ -60,49 +60,16 @@ def _relevant(title, keyword):
     return False
 
 
-# 分享按钮选择器（真实点击会触发页面 JS 带签名调用 share/code 接口）
-SHARE_SELECTORS = [
-    '.interact-container .share-icon',
-    '.share-container',
-    '[class*="share-btn"]',
-    '[class*="share-icon"]',
-    'button:has-text("分享")',
-]
-# 只为前 N 篇生成真实短链（其余笔记用长链兜底），控制总时长
-SHORT_LINK_N = 3
-
-
-def fetch_shortlink_by_click(page):
-    """在当前笔记详情页点击分享按钮，拦截 share/code 响应取真实 xhslink 短链。
-
-    短链接口需要页面 JS 动态计算的签名头（x-s-common 等），程序化直连会被
-    406 拒绝，只能靠真实点击触发。返回 'http://xhslink.com/a/<code>'；
-    找不到按钮/超时/无响应一律返回空串（调用方兜底用长链）。
-    """
-    try:
-        btn = None
-        for sel in SHARE_SELECTORS:
-            try:
-                b = page.query_selector(sel)
-                if b and b.is_visible():
-                    btn = b
-                    break
-            except Exception:
-                continue
-        if btn is None:
-            return ''
-        with page.expect_response(
-                lambda r: 'share/code' in r.url and r.request.method == 'POST',
-                timeout=6000) as resp_info:
-            btn.click(timeout=4000)
-        resp = resp_info.value
-        if resp.ok:
-            code = (resp.json() or {}).get('data') or ''
-            if code:
-                return 'http://xhslink.com/a/' + code
-    except Exception:
-        pass
-    return ''
+# ===== 笔记链接策略（重要，实测结论 2026-08-27）=====
+# 链接统一输出「规范长链」 https://www.xiaohongshu.com/discovery/item/<note_id>?xsec_token=...
+# 实测结论：
+#   1) 微信内点开：小红书对该长链走官方 OAuth，redirect_uri 完整保留笔记地址+token，
+#      授权后直接落到原帖（与官方分享行为一致）；
+#   2) 浏览器（登录/未登录）：直接打开笔记正文页（已实测）；
+#   3) 小红书 App：识别 discovery/item 原生格式，可直接打开。
+# 对比 xhslink.com/a/<code> 短链（官方 share/code 接口换的真码）：在微信/浏览器里
+# 实测 307 后落到 explore 首页推荐流（满屏无关内容，如国足），必须弃用。
+# 因此脚本不再生成短链；Java 端也不得改写为任何 xhslink 格式（尤其 xhslink.com/o/<id> 伪造格式）。
 
 
 def fetch_detail(page, url):
@@ -188,17 +155,13 @@ def main():
                 if len(items) < 3:
                     # 有效结果太少 → 大概率被风控/未登录，返回空让上层友好提示，绝不给无关链接
                     items = []
-                # ===== 逐篇提取正文 + 生成真实短链 =====
-                # 旧方案在 Java 端把长链"改写成" http://xhslink.com/o/<id>，该路径在 xhslink
-                # 上不存在 → 微信点击跳到小红书首页、App 提示"链接失效"。这里在详情页真实点击
-                # 分享按钮，拦截官方 share/code 接口拿到真码 → http://xhslink.com/a/<code>。
+                # ===== 逐篇提取正文（链接为规范长链，无需二次加工）=====
                 for idx in range(min(len(items), args.detail)):
                     it = items[idx]
                     if not it.get('url'):
                         it['content'] = ''
                         continue
                     it['content'] = fetch_detail(page, it['url'])
-                    it['shortlink'] = fetch_shortlink_by_click(page) if idx < SHORT_LINK_N else ''
             finally:
                 browser.close()
     except Exception:

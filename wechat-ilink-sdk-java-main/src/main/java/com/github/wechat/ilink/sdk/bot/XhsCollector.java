@@ -68,18 +68,16 @@ public class XhsCollector implements AutoCloseable {
      * 用于在 Agent 综合回答末尾追加"参考链接"，一次只给 1 条。
      *
      * @param keyword 搜索关键词（如 "南京 旅游攻略"、"南京 穿搭攻略"）
-     * @return 第一条笔记的链接（优先真实 xhslink 短链，其次规范长链）；失败抛 IOException
+     * @return 第一条笔记的规范长链（discovery/item + xsec_token，微信/浏览器/App 均可打开）；失败抛 IOException
      */
     public String searchTopNote(String keyword) throws IOException {
         String kw = keyword == null ? "" : keyword.trim();
         List<Note> notes = searchNotes(kw);
-        // 优先返回带真实 xhslink 短链的笔记（微信内可点、App 可打开）；
-        // 短链生成失败时退回到第一条的规范长链（App/浏览器可打开）。
-        for (Note n : notes) {
-            if (n.url != null && n.url.contains("xhslink.com")) {
-                return n.url;
-            }
-        }
+        // 链接策略（实测 2026-08-27）：统一用规范长链 discovery/item/<id>?xsec_token=...
+        // - 微信点开走小红书官方 OAuth，redirect_uri 保留笔记地址 → 直达原帖；
+        // - 浏览器（登录/未登录）直接打开笔记页；
+        // - App 识别 discovery/item 原生格式。
+        // ❗ 不要再用 xhslink 短链：实测 307 后落到 explore 首页推荐流（满屏无关内容如国足）。
         Note first = notes.get(0);
         return (first.url == null || first.url.isEmpty()) ? "" : first.url;
     }
@@ -239,15 +237,11 @@ public class XhsCollector implements AutoCloseable {
                 note.title = title;
                 note.author = n.path("author").asText("").trim();
                 note.likes = n.path("likes").asText("").trim();
-                // 链接优先级：
-                // ① 脚本实时生成的官方 xhslink 短链（微信内可点、App 可打开）；
-                // ② 无短链时把 search_result/explore 长链改写为 discovery/item 规范长链
-                //    （保留 xsec_token，App/浏览器可直接打开）；
-                // ③ 都失败则原样保留。
-                // ❗ 旧逻辑曾在 Java 端把长链"改写成" http://xhslink.com/o/<id>，
-                //    该路径在 xhslink 上不存在 → 微信点击跳到首页、App 提示链接失效。
-                String shortlink = n.path("shortlink").asText("").trim();
-                note.url = !shortlink.isEmpty() ? shortlink : toCanonicalUrl(url);
+                // 链接：统一改写为 discovery/item 规范长链（保留 xsec_token）。
+                // 实测：该格式微信（官方 OAuth 直达）、浏览器、小红书 App 均可打开原帖。
+                // ❗ 禁止改写为 xhslink 短链（含伪造的 xhslink.com/o/<id>）——实测会落到
+                //    explore 首页推荐流（无关内容如国足）或直接链接失效。
+                note.url = toCanonicalUrl(url);
                 note.content = n.path("content").asText("").trim();
                 result.add(note);
             }
@@ -278,16 +272,15 @@ public class XhsCollector implements AutoCloseable {
                 sb.append("   📝 （这篇没能抓到正文摘要，只给你标题和链接）\n");
             }
             if (n.url != null && !n.url.isEmpty()) {
-                // url 已在 parseNotes 里换成：官方短链（优先）或规范长链（兜底）
+                // url 已在 parseNotes 里统一换成 discovery/item 规范长链（保留 xsec_token）
                 sb.append("   🔗 ").append(n.url).append('\n');
             }
             sb.append('\n');
         }
-        // 文案重点：让用户知道"上面的 📝 正文摘要 + 👤 作者"已经够用，
-        // 链接是 bonus。xhslink 短链在微信/App 都能打开；长链（xiaohongshu.com）
-        // 在微信里会被小红书拦截（页面不见），需复制到 App 或手机浏览器打开。
-        sb.append("💡 链接说明：开头 xhslink.com 的是官方短链，微信里可直接点、App 能打开；\n");
-        sb.append("   其余 xiaohongshu.com 长链请复制到小红书 App 或手机浏览器打开（微信内会提示「页面不见」）。\n");
+        // 文案重点：让用户知道"上面的 📝 正文摘要 + 👤 作者"已经够用，链接是 bonus。
+        // 链接是 discovery/item 规范长链：微信点开走官方授权直达原帖；若个别链接在
+        // 微信内被拦截，复制到小红书 App 或手机浏览器打开即可。
+        sb.append("💡 链接说明：以上为小红书官方笔记链接，微信内点开可直达原帖；若微信提示拦截，复制链接到小红书 App 或手机浏览器打开。\n");
         sb.append("   📝 上面每篇都给了 500 字正文摘要 + 店铺/地址/玩法等关键信息，其实不点链接也能读全。");
         return sb.toString().trim();
     }
@@ -295,12 +288,11 @@ public class XhsCollector implements AutoCloseable {
     /**
      * 把脚本返回的长链改写为规范可打开链接（不是伪造短链！）。
      * <p>search_result/explore 长链 → discovery/item/&lt;note_id&gt;（保留全部 query 参数，
-     * 含 xsec_token；App/浏览器可直接打开该笔记）。已是 xhslink 短链或改写不动则原样返回。
+     * 含 xsec_token）。实测该格式：微信（官方 OAuth 直达原帖）、浏览器（登录/未登录）、
+     * 小红书 App 均可打开。改写不动则原样返回。
      */
     private static String toCanonicalUrl(String url) {
         if (url == null || url.isEmpty()) return url;
-        // 已是真实短链（脚本生成的 xhslink.com/a/xxx）→ 直接用
-        if (url.contains("xhslink.com")) return url;
         try {
             // search_result/<id>?... 或 explore/<id>?... → discovery/item/<id>?...
             // 只改路径段，query（xsec_token / xsec_source 等）原样保留

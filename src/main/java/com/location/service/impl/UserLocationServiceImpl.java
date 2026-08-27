@@ -1,5 +1,6 @@
 package com.location.service.impl;
 
+import com.location.dto.TransitRouteResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.location.dto.GeocodeResult;
@@ -87,6 +88,11 @@ public class UserLocationServiceImpl implements UserLocationService {
                 destinationPoint.latitude(),
                 mode
         );
+    }
+
+    @Override
+    public TransitRouteResult planTransitRoute(String userId, String destination, int strategy) {
+        return null;
     }
 
     private void requireUserId(String userId) {

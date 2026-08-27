@@ -22,15 +22,13 @@ import java.util.regex.Pattern;
 public class VideoSummarySkill extends BaseSkill {
 
     private static final String SILICONFLOW_API_URL = "https://api.siliconflow.cn/v1";
-
+    private String apiKey = System.getenv("SILICONFLOW_API_KEY");
     // B站视频链接正则
     private static final Pattern BILI_PATTERN = Pattern.compile(
             "(?:https?://)?(?:www\\.)?bilibili\\.com/video/(BV\\w+)|" +
                     "(?:https?://)?(?:www\\.)?b23\\.tv/(\\w+)"
     );
 
-    @Value("${spring.ai.openai.api-key}")
-    private String apiKey;
 
     private final OkHttpClient httpClient = new OkHttpClient.Builder()
             .connectTimeout(120, TimeUnit.SECONDS)

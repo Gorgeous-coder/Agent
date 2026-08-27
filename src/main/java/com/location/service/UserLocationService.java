@@ -2,6 +2,7 @@ package com.location.service;
 
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
+import com.location.dto.TransitRouteResult;
 import com.location.model.UserLocation;
 
 import java.util.List;
@@ -28,4 +29,9 @@ public interface UserLocationService {
             String destination,
             String mode
     );
+
+    /**
+     * 规划公共交通路线（公交/地铁/高铁）
+     */
+    TransitRouteResult planTransitRoute(String userId, String destination, int strategy);
 }

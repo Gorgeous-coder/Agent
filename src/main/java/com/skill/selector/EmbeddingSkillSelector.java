@@ -1,9 +1,9 @@
 package com.skill.selector;
 
+import com.skill.registry.SkillRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import com.skill.model.SkillDefinition;
-import com.skill.registry.SkillRegistry;
 
 import java.util.Locale;
 import java.util.Set;

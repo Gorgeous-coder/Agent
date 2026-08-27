@@ -29,4 +29,9 @@ public interface LlmService {
      * @param systemContext 系统消息上下文（文档内容等）；为 {@code null} 时不注入
      */
     String chat(String text, List<String> imageUrls, ChatClient client, String userId, String systemContext);
+
+    String chat(String text, List<String> imageUrls, ChatClient client, String userId,
+                String systemContext, boolean skillEnabled);
+
+    boolean exitSkill(String userId);
 }

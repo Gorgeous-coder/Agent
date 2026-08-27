@@ -1,11 +1,10 @@
 package com.skill.tool;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.support.ToolCallbacks;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.stereotype.Component;
 import com.skill.model.SkillDefinition;
-import com.rag.tool.DialectAssistantTools;
+
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -25,25 +24,13 @@ public class SkillToolResolver {
      */
     private final Map<String, ToolCallback> toolCallbacks;
 
-    public SkillToolResolver(
-            DialectAssistantTools dialectAssistantTools) {
+    public SkillToolResolver() {
+        Map<String, ToolCallback> discoveredTools = new LinkedHashMap<>();
 
-        Map<String, ToolCallback> discoveredTools =
-                new LinkedHashMap<>();
+        // 方言功能已禁用，暂时不扫描任何工具
+        // 后续如果有其他工具需要注册，可以在这里添加
 
-        // 扫描方言助手技能工具
-        ToolCallback[] dialectCallbacks =
-                ToolCallbacks.from(dialectAssistantTools);
-        for (ToolCallback callback : dialectCallbacks) {
-            String toolName = callback.getToolDefinition().name();
-            ToolCallback existing = discoveredTools.putIfAbsent(toolName, callback);
-            if (existing != null) {
-                throw new IllegalStateException("发现重复的Tool名称：" + toolName);
-            }
-        }
-
-        this.toolCallbacks =
-                Map.copyOf(discoveredTools);
+        this.toolCallbacks = Map.copyOf(discoveredTools);
 
         log.info(
                 "[SkillToolResolver] Tool加载完成: count={}, names={}",
@@ -51,7 +38,6 @@ public class SkillToolResolver {
                 toolCallbacks.keySet()
         );
     }
-
     /**
      * 根据Skill声明的工具名称，返回允许使用的工具。
      */

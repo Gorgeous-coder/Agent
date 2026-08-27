@@ -66,4 +66,6 @@ public class RagService {
         context.append("请结合以上参考资料回答用户问题。\n---\n");
         return context.toString();
     }
+
+
 }

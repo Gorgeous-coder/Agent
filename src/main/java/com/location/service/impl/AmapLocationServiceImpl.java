@@ -119,7 +119,6 @@ public class AmapLocationServiceImpl
                     province,
                     city,
                     citycode,
-                    district,
                     longitude,
                     latitude
             );
@@ -279,6 +278,7 @@ public class AmapLocationServiceImpl
             throw new RuntimeException("路线规划失败：" + e.getMessage());
         }
     }
+
 
     @Override
     public TransitRouteResult planTransitRoute(

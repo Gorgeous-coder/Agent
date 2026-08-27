@@ -1,13 +1,17 @@
 package com.processor;
 
 import com.github.wechat.ilink.sdk.ILinkClient;
-import com.llm.rag.RagService;
 import com.github.wechat.ilink.sdk.core.model.CDNMedia;
 import com.github.wechat.ilink.sdk.core.model.MessageItem;
 import com.github.wechat.ilink.sdk.core.model.WeixinMessage;
-import com.llm.skill.Skill;
-import com.llm.skill.SkillRegistry;
+import com.llm.service.LlmService;
+import com.llm.skill.impl.VideoSummarySkill;
+import com.llm.tools.ImageAnalysisTool;
+import com.llm.tools.ImageTools;
 import com.llm.tools.TranslatorTools;
+import com.rag.service.RagService;
+import com.skill.model.SkillDefinition;
+import com.skill.registry.SkillRegistry;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,19 +20,12 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.llm.service.LlmService;
-import com.llm.tools.ImageAnalysisTool;
-import com.llm.tools.ImageTools;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
-/**
- * 微信消息处理器：专注于文字、单张图片、语音及天气等 @Tool 自动触发。
- */
 @Slf4j
 @Component
 @SuppressWarnings("unused")
@@ -38,12 +35,19 @@ public class MessageProcessor {
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .build();
+
     private final TranslatorTools translatorTools;
     private final LlmService llmService;
     private final ChatClient deepseekClient;
     private final ImageAnalysisTool imageAnalysisTool;
     private final UserContext userContext;
     private final Queue<ProcessResult> voiceQueue;
+
+    @Autowired
+    private SkillRegistry skillRegistry;
+
+    @Autowired
+    private RagService ragService;
 
     public MessageProcessor(LlmService llmService,
                             ChatClient deepseekClient,
@@ -59,16 +63,6 @@ public class MessageProcessor {
         this.voiceQueue = voiceQueue;
     }
 
-    /**
-     * 处理一条微信消息，同步返回处理结果。
-     */
-
-    @Autowired
-    private SkillRegistry skillRegistry;
-
-    @Autowired
-    private RagService ragService;
-
     public ProcessResult process(WeixinMessage msg, ILinkClient client) {
         long start = System.currentTimeMillis();
         String fromUserId = msg.getFrom_user_id();
@@ -81,7 +75,9 @@ public class MessageProcessor {
         // 每次处理新消息前，先清理旧的图片缓存
         ImageTools.lastGeneratedImageUrl = null;
 
+        // ============================================================
         // 1. 提取文本、语音识别文字和图片的字节数组
+        // ============================================================
         String text = extractText(msg);
         String voiceText = extractVoiceText(msg);
         List<byte[]> imageBytesList = extractImageBytes(msg, client);
@@ -96,7 +92,7 @@ public class MessageProcessor {
         }
 
         // ============================================================
-        // 第 0 步：翻译优先（独立于三级路由）
+        // 第 0 步：翻译优先
         // ============================================================
         if (text != null && !text.isBlank()) {
             String translateResult = translatorTools.tryHandle(text);
@@ -107,31 +103,29 @@ public class MessageProcessor {
         }
 
         // ============================================================
-        // 第 1 步：Skill 匹配（优先级最高）
-        // ============================================================
+// 第 1 步：Skill 匹配
+// ============================================================
         if (text != null && !text.isBlank()) {
-            Skill matchedSkill = skillRegistry.match(text);
-            if (matchedSkill != null) {
-                log.info("🎯 [路由-1] Skill 匹配成功: {}", matchedSkill.getName());
-                String result = matchedSkill.execute(text, fromUserId);
+            // ✅ 优先检查 B站链接（匹配 VideoSummarySkill）
+            if (text.contains("bilibili") || text.contains("b23.tv")) {
+                log.info("🎬 检测到 B站视频链接");
+                // 直接创建并执行 VideoSummarySkill
+                VideoSummarySkill videoSkill = new VideoSummarySkill();
+                String result = videoSkill.execute(text, fromUserId);
                 return ProcessResult.text(result, fromUserId);
             }
         }
-
         // ============================================================
-        // 第 2 步：RAG 检索（次优先级）
+        // 第 2 步：RAG 检索
         // ============================================================
         if (text != null && !text.isBlank()) {
-            String ragResult = ragService.search(text);
-            if (ragResult != null && !ragResult.isEmpty()) {
+            String ragContext = ragService.getContext(fromUserId, text, true);
+            if (ragContext != null && !ragContext.isEmpty()) {
                 log.info("📚 [路由-2] RAG 匹配成功，增强 Prompt");
-                String enhancedPrompt = buildRagPrompt(text, ragResult);
-                // 图片场景下也用增强 Prompt
+                String enhancedPrompt = buildRagPrompt(text, ragContext);
                 if (!imageBytesList.isEmpty()) {
                     byte[] imageBytes = imageBytesList.get(0);
-                    String prompt = enhancedPrompt;
-                    log.info("[Processor] RAG + 图片分析: userId={}", fromUserId);
-                    String reply = imageAnalysisTool.analyzeImage(prompt, imageBytes);
+                    String reply = imageAnalysisTool.analyzeImage(enhancedPrompt, imageBytes);
                     return ProcessResult.text(reply, fromUserId);
                 }
                 String reply = llmService.chat(enhancedPrompt, List.of(), deepseekClient, fromUserId);
@@ -153,37 +147,31 @@ public class MessageProcessor {
                 if (!imageBytesList.isEmpty()) {
                     byte[] imageBytes = imageBytesList.get(0);
                     String prompt = (finalText != null && !finalText.isBlank()) ? finalText : "请详细描述这张图片";
-                    log.info("[Processor] 触发图片直连分析: userId={}, prompt={}", fromUserId, prompt);
                     reply = imageAnalysisTool.analyzeImage(prompt, imageBytes);
                 } else {
-                    // 纯文本对话
+                    // ✅ 传入 userId，让 LlmServiceImpl 能保存历史
                     reply = llmService.chat(finalText, List.of(), deepseekClient, fromUserId);
                 }
 
                 long elapsed = System.currentTimeMillis() - start;
                 log.info("[Processor] 处理成功: elapsed={}ms, userId={}", elapsed, fromUserId);
 
-                // 检查是否有语音播报结果
                 ProcessResult voiceResult = voiceQueue.poll();
                 if (voiceResult != null) {
                     result[0] = voiceResult;
                     return;
                 }
 
-                // 检查是否有生成的图片 URL
                 String cachedUrl = ImageTools.lastGeneratedImageUrl;
                 if (cachedUrl != null) {
                     ImageTools.lastGeneratedImageUrl = null;
-                    log.info("[Processor] 检测到新生成的图片 URL: {}", cachedUrl);
                     byte[] imageData = downloadImage(cachedUrl);
                     if (imageData != null) {
                         result[0] = ProcessResult.image(imageData, fromUserId);
                         return;
                     }
-                    log.warn("[Processor] 图片下载失败，降级发送文字提示: userId={}", fromUserId);
                 }
 
-                // 默认返回文本
                 result[0] = ProcessResult.text(reply, fromUserId);
 
             } catch (Exception e) {
@@ -197,8 +185,15 @@ public class MessageProcessor {
     }
 
     /**
-     * 构建 RAG 增强 Prompt
+     * 执行 Skill
      */
+    private String executeSkill(SkillDefinition skill, String userMessage, String userId) {
+        // TODO: 根据 Skill 定义执行具体逻辑
+        // 这里需要调用 SkillToolResolver 或直接执行
+        log.info("[Skill] 执行: {}, userId={}", skill.name(), userId);
+        return "✅ 执行技能: " + skill.name() + "\n" + skill.description();
+    }
+
     private String buildRagPrompt(String userQuestion, String ragContext) {
         return """
             请基于以下知识库信息回答用户的问题。
@@ -251,9 +246,6 @@ public class MessageProcessor {
         return imageBytesList;
     }
 
-    /**
-     * 纯净下载逻辑
-     */
     private byte[] downloadImage(String imageUrl) {
         String cleanUrl = imageUrl != null ? imageUrl.trim() : "";
         if (cleanUrl.isEmpty()) {
@@ -267,15 +259,13 @@ public class MessageProcessor {
 
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()) {
             if (!response.isSuccessful() || response.body() == null) {
-                String errorBody = response.body() != null ? response.body().string() : "empty";
-                log.error("[Processor] 下载图片失败: url={}, httpCode={}, error={}", cleanUrl, response.code(), errorBody);
                 return null;
             }
             byte[] data = response.body().bytes();
-            log.info("[Processor] 图片下载成功: url={}, size={}KB", cleanUrl, data.length / 1024);
+            log.info("[Processor] 图片下载成功: {}KB", data.length / 1024);
             return data;
         } catch (Exception e) {
-            log.error("[Processor] 下载图片异常: url={}, error={}", cleanUrl, e.getMessage(), e);
+            log.error("[Processor] 下载图片异常: {}", e.getMessage());
             return null;
         }
     }

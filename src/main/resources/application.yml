@@ -14,7 +14,7 @@ spring:
           model: "FunAudioLLM/CosyVoice2-0.5B"
           voice: "FunAudioLLM/CosyVoice2-0.5B:alex"
 
-  # ========== 新增：数据库配置 ==========
+  # ========== 数据库配置 ==========
   datasource:
     url: jdbc:sqlite:${YKD_WORK_DIR:./work}/sqlite/conversation.db
     driver-class-name: org.sqlite.JDBC
@@ -22,12 +22,29 @@ spring:
       maximum-pool-size: 1
   sql:
     init:
-      mode: never
+      # ✅ 改为 always，让 Spring Boot 启动时自动执行 schema.sql 建表
+      mode: always
+      # ✅ 指定 schema 文件位置
+      schema-locations: classpath:sqlite/schema.sql
 
-# ========== 新增：MyBatis 配置 ==========
+# ========== MyBatis 配置 ==========
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+  # ✅ 指定 Mapper 文件位置（如果使用 XML 方式）
+  mapper-locations: classpath:mapper/*.xml
+  # ✅ 指定实体类包路径（用于别名）
+  type-aliases-package: com.rag.model
 
-gaode:
-  key: ${GAODE_KEY:}
+# ========== RAG 配置 ==========
+app:
+  rag:
+    # ✅ 控制启动时是否自动入库知识库文档
+    ingest-enabled: false
+
+# ========== 日志配置（方便调试） ==========
+logging:
+  level:
+    com.rag: DEBUG
+    com.llm.rag: DEBUG
+    org.springframework.ai: DEBUG

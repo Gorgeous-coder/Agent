@@ -1,15 +1,19 @@
 package com.processor;
 
 import com.github.wechat.ilink.sdk.ILinkClient;
+import com.llm.rag.RagService;
 import com.github.wechat.ilink.sdk.core.model.CDNMedia;
 import com.github.wechat.ilink.sdk.core.model.MessageItem;
 import com.github.wechat.ilink.sdk.core.model.WeixinMessage;
+import com.llm.skill.Skill;
+import com.llm.skill.SkillRegistry;
 import com.llm.tools.TranslatorTools;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.llm.service.LlmService;
@@ -58,6 +62,13 @@ public class MessageProcessor {
     /**
      * 处理一条微信消息，同步返回处理结果。
      */
+
+    @Autowired
+    private SkillRegistry skillRegistry;
+
+    @Autowired
+    private RagService ragService;
+
     public ProcessResult process(WeixinMessage msg, ILinkClient client) {
         long start = System.currentTimeMillis();
         String fromUserId = msg.getFrom_user_id();
@@ -84,7 +95,9 @@ public class MessageProcessor {
             return null;
         }
 
-        // 提取到文本后，优先判断翻译
+        // ============================================================
+        // 第 0 步：翻译优先（独立于三级路由）
+        // ============================================================
         if (text != null && !text.isBlank()) {
             String translateResult = translatorTools.tryHandle(text);
             if (translateResult != null) {
@@ -93,17 +106,53 @@ public class MessageProcessor {
             }
         }
 
+        // ============================================================
+        // 第 1 步：Skill 匹配（优先级最高）
+        // ============================================================
+        if (text != null && !text.isBlank()) {
+            Skill matchedSkill = skillRegistry.match(text);
+            if (matchedSkill != null) {
+                log.info("🎯 [路由-1] Skill 匹配成功: {}", matchedSkill.getName());
+                String result = matchedSkill.execute(text, fromUserId);
+                return ProcessResult.text(result, fromUserId);
+            }
+        }
+
+        // ============================================================
+        // 第 2 步：RAG 检索（次优先级）
+        // ============================================================
+        if (text != null && !text.isBlank()) {
+            String ragResult = ragService.search(text);
+            if (ragResult != null && !ragResult.isEmpty()) {
+                log.info("📚 [路由-2] RAG 匹配成功，增强 Prompt");
+                String enhancedPrompt = buildRagPrompt(text, ragResult);
+                // 图片场景下也用增强 Prompt
+                if (!imageBytesList.isEmpty()) {
+                    byte[] imageBytes = imageBytesList.get(0);
+                    String prompt = enhancedPrompt;
+                    log.info("[Processor] RAG + 图片分析: userId={}", fromUserId);
+                    String reply = imageAnalysisTool.analyzeImage(prompt, imageBytes);
+                    return ProcessResult.text(reply, fromUserId);
+                }
+                String reply = llmService.chat(enhancedPrompt, List.of(), deepseekClient, fromUserId);
+                return ProcessResult.text(reply, fromUserId);
+            }
+        }
+
+        // ============================================================
+        // 第 3 步：LLM 兜底闲聊
+        // ============================================================
+        log.info("💬 [路由-3] 走 LLM 兜底闲聊");
+
         var result = new ProcessResult[1];
         String finalText = text;
 
-        // 2. 在用户上下文中通过 AI 处理请求
         userContext.executeAs(fromUserId, () -> {
             try {
                 String reply;
                 if (!imageBytesList.isEmpty()) {
                     byte[] imageBytes = imageBytesList.get(0);
                     String prompt = (finalText != null && !finalText.isBlank()) ? finalText : "请详细描述这张图片";
-
                     log.info("[Processor] 触发图片直连分析: userId={}, prompt={}", fromUserId, prompt);
                     reply = imageAnalysisTool.analyzeImage(prompt, imageBytes);
                 } else {
@@ -114,29 +163,27 @@ public class MessageProcessor {
                 long elapsed = System.currentTimeMillis() - start;
                 log.info("[Processor] 处理成功: elapsed={}ms, userId={}", elapsed, fromUserId);
 
-                // 3. 检查是否有语音播报结果
+                // 检查是否有语音播报结果
                 ProcessResult voiceResult = voiceQueue.poll();
                 if (voiceResult != null) {
                     result[0] = voiceResult;
                     return;
                 }
 
-                // 4. 直接检查 ImageTools 内存中是否暂存了生成的图片 URL
+                // 检查是否有生成的图片 URL
                 String cachedUrl = ImageTools.lastGeneratedImageUrl;
                 if (cachedUrl != null) {
-                    ImageTools.lastGeneratedImageUrl = null; // 用完即清空
-
-                    log.info("[Processor] 检测到新生成的图片 URL，直接下载并转为图片消息返回: {}", cachedUrl);
+                    ImageTools.lastGeneratedImageUrl = null;
+                    log.info("[Processor] 检测到新生成的图片 URL: {}", cachedUrl);
                     byte[] imageData = downloadImage(cachedUrl);
                     if (imageData != null) {
-                        // 直接返回图片格式，机器人会直接展示图片而不是链接
                         result[0] = ProcessResult.image(imageData, fromUserId);
                         return;
                     }
                     log.warn("[Processor] 图片下载失败，降级发送文字提示: userId={}", fromUserId);
                 }
 
-                // 5. 默认返回文本
+                // 默认返回文本
                 result[0] = ProcessResult.text(reply, fromUserId);
 
             } catch (Exception e) {
@@ -147,6 +194,23 @@ public class MessageProcessor {
         });
 
         return result[0];
+    }
+
+    /**
+     * 构建 RAG 增强 Prompt
+     */
+    private String buildRagPrompt(String userQuestion, String ragContext) {
+        return """
+            请基于以下知识库信息回答用户的问题。
+
+            ===== 知识库信息 =====
+            %s
+            ======================
+
+            用户问题：%s
+
+            请基于知识库内容给出准确、清晰的回答。如果知识库中没有相关信息，请如实告知用户。
+            """.formatted(ragContext, userQuestion);
     }
 
     private String extractText(WeixinMessage msg) {

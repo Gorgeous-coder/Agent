@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -34,6 +35,21 @@ public class BotMain {
     private final DashScopeClient dashScopeClient;
     private final AudioConverter audioConverter;
     private final Weather weather;
+    private final WeatherBriefingSkill weatherBriefingSkill;
+    private final DiningSkill diningSkill;
+    private final AgentPlanner agentPlanner;
+    private final Translator translator;
+    private final Calculator calculator;
+    private final SkillRegistry skillRegistry;
+    private final FocusTimerSkill focusTimerSkill;
+    private final VoiceProfileSkill voiceProfileSkill;
+    private final RoutineSkill routineSkill;
+    private final LocalRag localRag;
+    private final boolean enableRag;
+    /** RSS 订阅推送（半自动化新攻略监控，无 cookie/无风控） */
+    private final RssSkill rssSkill;
+    /** 小红书实时采集器（Playwright+系统Edge；cookie 配置齐全才启用） */
+    private final XhsCollector xhsCollector;
     private final String systemPrompt;
     private final int maxHistoryTurns;
     private final String replyPrefix;
@@ -41,6 +57,13 @@ public class BotMain {
     private final String unsupportedReply;
     private final boolean imageReplyEnabled;
     private final boolean voiceReplyEnabled;
+
+    /** 活跃用户集合 */
+    private final java.util.Set<String> activeUsers = java.util.concurrent.ConcurrentHashMap.newKeySet();
+    /** 用户所在城市记忆（userId → 城市名；用户说过"XX天气"后记住，后续"要不要带伞"用这个城市） */
+    private final Map<String, String> userCities = new ConcurrentHashMap<>();
+    /** 配置里的全局默认城市（bot.default-city） */
+    private final String configDefaultCity;
 
     private final Map<String, List<Map<String, String>>> chatHistories = new ConcurrentHashMap<>();
     private final ExecutorService replyExecutor = Executors.newFixedThreadPool(4, r -> {
@@ -52,6 +75,25 @@ public class BotMain {
     private static final Pattern DRAW_PATTERN = Pattern.compile(
             "(画|绘制|生成|做|创作|设计).{0,20}(图|图片|照片|壁纸|海报|插画|头像)"
                     + "|(图|图片|照片|壁纸|海报|插画|头像).{0,20}(画|绘制|生成|做|创作|设计)");
+
+    /** 指定音色说文本："用龙小淳说你好" / "用龙成念一首诗" */
+    private static final Pattern USE_VOICE_PATTERN = Pattern.compile(
+            "用(龙安洋|安洋|龙小淳|小淳|龙成|小成|longanyang|longxiaochun|longchen)"
+                    + "(?:的)?(?:音色|声音)?(?:说|读|讲|念)(.+)$");
+    /** 三个音色分别说："用三个音色分别说你好" / "用三个音色都说你好" / "用三个音色分别和我说，你好" */
+    private static final Pattern MULTI_VOICE_PATTERN = Pattern.compile(
+            "用(?:三个|3个|所有|全部)?个?(?:音色|声音)(?:分别|都|各|和)?(?:我|你)?(?:说|读|讲|念)(?:一下|一遍)?[,，、\\s]*(.+)$");
+
+    /** 小红书实时采集触发：含"攻略/穿搭/美食/演唱会/穿什么"等明确咨询词 */
+    private static final Pattern XHS_GUIDE_PATTERN = Pattern.compile(
+            "攻略|游记|种草|避雷|怎么玩|去哪儿玩|值得去|穿什么|穿搭建议|搭配建议|怎么穿|穿搭|搭配|吃什么|怎么吃|演唱会|美食推荐|美食");
+    /**
+     * 攻略主题词：从"南京美食攻略"里提取"美食"。
+     * ⚠️ 只保留明确攻略意图的词；"景点/酒店/购物/拍照/住宿/路线/行程/打卡"这种
+     * 闲聊高频词不触发（用户说"今天去酒店开会""我打卡下班了"不该去爬小红书）。
+     */
+    private static final Pattern XHS_TOPIC_PATTERN = Pattern.compile(
+            "(美食|穿搭|演唱会|旅游|旅行|餐厅|小吃|亲子|滑雪|露营|徒步|避雷|种草|日式|韩系|温柔风|简约风|夏日穿搭|秋冬穿搭)");
 
     private volatile ILinkClient client;
     private volatile boolean running = true;
@@ -66,11 +108,19 @@ public class BotMain {
 
         this.aiClient = new AiClient(baseUrl, apiKey, model, temperature, maxTokens);
         this.visionClient = new AiClient(baseUrl, apiKey, visionModel, temperature, maxTokens);
+
+        // TTS 默认 voice：先读 voice_profile.json（用户之前切换过），没有就用 ai-bot.properties 的 ai.tts-voice
+        String ttsVoiceFromProps = resolve(props, "ai.tts-voice", "longanyang");
+        String savedVoice = VoiceProfileSkill.loadDefaultVoice("voice_profile.json");
+        String finalVoice = (savedVoice == null || savedVoice.isEmpty()) ? ttsVoiceFromProps : savedVoice;
         this.dashScopeClient = new DashScopeClient(
                 apiKey,
                 resolve(props, "ai.image-model", "wanx2.1-t2i-turbo"),
-                resolve(props, "ai.tts-model", "cosyvoice-v2"),
-                resolve(props, "ai.tts-voice", "longxiaochun"));
+                resolve(props, "ai.tts-model", "cosyvoice-v3-flash"),
+                finalVoice);
+        if (savedVoice != null && !savedVoice.isEmpty()) {
+            System.out.println("[TTS] 已从 voice_profile.json 加载默认音色：" + savedVoice);
+        }
 
         this.audioConverter = new AudioConverter(
                 resolve(props, "ai.ffmpeg-path", ""),
@@ -84,7 +134,92 @@ public class BotMain {
         this.unsupportedReply = resolve(props, "bot.unsupported-reply", "暂只支持文本消息");
         this.imageReplyEnabled = Boolean.parseBoolean(resolve(props, "bot.image-reply", "true"));
         this.voiceReplyEnabled = Boolean.parseBoolean(resolve(props, "bot.voice-reply", "true"));
-        this.weather = new Weather(resolve(props, "bot.default-city", "深圳"));
+        this.configDefaultCity = resolve(props, "bot.default-city", "深圳");
+        this.weather = new Weather(configDefaultCity);
+
+        // ===== 工具类（业务层）=====
+        this.translator = new Translator();
+        this.calculator = new Calculator();
+
+        // ===== Skill 工具注册表：天气简报优先（"穿/带伞/出门"触发）→ 天气 → 翻译 → 单位换算 → 计算器 =====
+        this.skillRegistry = new SkillRegistry();
+        // 天气简报排第一：含"出门/穿/带伞"等词时优先于纯天气命中，给出穿衣/带伞建议
+        this.weatherBriefingSkill = new WeatherBriefingSkill(weather, configDefaultCity);
+        skillRegistry.register(weatherBriefingSkill);
+        skillRegistry.register(new Skill() {
+            @Override public String name() { return "天气"; }
+            @Override public String tryHandle(String text) { return weather.tryHandle(text); }
+        });
+        skillRegistry.register(new Skill() {
+            @Override public String name() { return "翻译"; }
+            @Override public String tryHandle(String text) { return translator.tryHandle(text); }
+        });
+        // 单位换算排在计算器前面：含单位词的算式（如"5千米等于多少米"）先被单位换算命中
+        skillRegistry.register(new UnitConverterSkill());
+        skillRegistry.register(new Skill() {
+            @Override public String name() { return "计算器"; }
+            @Override public String tryHandle(String text) { return calculator.tryHandle(text); }
+        });
+        // 音色管理：放最后，避免误触发（"音色"可能出现在闲聊里）
+        this.voiceProfileSkill = new VoiceProfileSkill("voice_profile.json");
+        skillRegistry.register(voiceProfileSkill);
+
+        // ===== B 批：作息 / 健康（提醒+日常关怀已删除，用户说太难）=====
+        this.routineSkill = new RoutineSkill("routine_profile.json");
+        skillRegistry.register(routineSkill);
+        skillRegistry.register(new HealthTipSkill());
+        skillRegistry.register(new HealthWaterSkill(routineSkill));
+
+        // ===== C 批：美食推荐（dining / daily-dining / meal-plan，用高德 GAODE_KEY）=====
+        this.diningSkill = new DiningSkill(System.getenv("GAODE_KEY"), configDefaultCity, weather);
+        skillRegistry.register(diningSkill);
+        System.out.println("[Skill] 已注册工具: " + skillRegistry.names());
+
+        // 专注计时（带 userId 状态）：不放 SkillRegistry，由路由显式调用（按用户优先级）
+        this.focusTimerSkill = new FocusTimerSkill();
+
+        // ===== 小红书实时采集（Playwright+系统Edge，每次独立进程，无 daemon）=====
+        String xhsSession = resolve(props, "xhs.cookie.web-session", "").trim();
+        String xhsA1 = resolve(props, "xhs.cookie.a1", "").trim();
+        String xhsWebId = resolve(props, "xhs.cookie.web-id", "").trim();
+        if (!xhsSession.isEmpty() && !xhsA1.isEmpty() && !xhsWebId.isEmpty()) {
+            this.xhsCollector = new XhsCollector(xhsSession, xhsA1, xhsWebId,
+                    Integer.parseInt(resolve(props, "xhs.top-n", "8")));
+            System.out.println("[XhsCollector] 小红书实时采集已启用（发\"XX美食/XX穿搭/XX攻略\"触发）");
+        } else {
+            this.xhsCollector = null;
+            System.out.println("[XhsCollector] 未配置小红书 cookie，实时采集关闭（在 ai-bot.properties 填 xhs.cookie.* 可启用）");
+        }
+
+        // ===== 多工具协同规划器（Agent：自主拆解 → 顺序调用多 Skill → LLM 整合）=====
+        this.agentPlanner = new AgentPlanner(weather, weatherBriefingSkill, diningSkill,
+                xhsCollector, aiClient, configDefaultCity, systemPrompt);
+        System.out.println("[Agent] 多工具协同规划器已启动");
+
+        // ===== RAG 关键词检索（enableRag 布尔开关，false 关闭检索做对比测试）=====
+        this.enableRag = Boolean.parseBoolean(resolve(props, "bot.enable-rag", "true"));
+        this.localRag = new LocalRag(
+                resolve(props, "bot.rag-doc-dir", "rag-docs"),
+                enableRag,
+                Integer.parseInt(resolve(props, "bot.rag-top-k", "3")));
+
+        // ===== RSS 订阅推送（半自动化监控新攻略，无 cookie/无风控；配置见 rss-feeds.properties）=====
+        this.rssSkill = new RssSkill(
+                resolve(props, "bot.rss-feeds-path", "rss-feeds.properties"),
+                payload -> {
+                    // payload 格式："userId\n消息"，回调里把消息发给 userId
+                    int idx = payload.indexOf('\n');
+                    if (idx < 0) return;
+                    String uid = payload.substring(0, idx);
+                    String msg = payload.substring(idx + 1);
+                    try {
+                        client.sendText(uid, msg);
+                        System.out.println("[RssSkill] 推送 → " + uid + " (" + msg.length() + " 字)");
+                    } catch (Exception e) {
+                        System.err.println("[RssSkill] 推送失败 " + uid + ": " + e.getMessage());
+                    }
+                });
+        // 注：RssSkill.start() 在 login 成功后调用（等 client 就绪）
 
         // ===== 启动时检查 FFmpeg =====
         checkFFmpeg();
@@ -125,6 +260,9 @@ public class BotMain {
         LoginContext ctx = client.getLoginFuture().get();
         System.out.println("登录完成，开始监听消息... botId = " + ctx.getBotId());
 
+        // 启动 RSS 定时推送（每 5 分钟拉一次，发现新条目推送给活跃用户）
+        if (rssSkill != null) rssSkill.start();
+
         while (running) {
             try {
                 List<WeixinMessage> msgs = client.getUpdates();
@@ -155,6 +293,7 @@ public class BotMain {
         for (WeixinMessage msg : messages) {
             String fromUserId = msg.getFrom_user_id();
             if (fromUserId == null || fromUserId.isEmpty()) continue;
+            activeUsers.add(fromUserId);  // 收集活跃用户（定时推送用）
             if (botId != null && botId.equals(fromUserId)) {
                 System.out.println("[INFO] 跳过 bot 自己发出的消息");
                 continue;
@@ -210,7 +349,7 @@ public class BotMain {
         }
     }
 
-    /** ✅ 修复：文本消息增加 contextToken */
+    /** ✅ 文本消息：走三级路由（Skill 执行 → RAG 增强 → LLM 闲聊兜底） */
     private void handleText(String fromUserId, String text, String contextToken) {
         replyExecutor.submit(() -> {
             try {
@@ -220,15 +359,45 @@ public class BotMain {
                     if (reply != null) return;
                 }
 
-                // ===== 天气查询：交给 Weather 类一站式处理 =====
-                String weatherText = weather.tryHandle(text);
-                if (weatherText != null) {
-                    System.out.println("天气查询成功：" + truncate(weatherText, 60));
-                    sendTextReply(fromUserId, weatherText, contextToken);
-                    return;
+                // ===== 指定音色语音指令：用龙小淳说你好 / 用三个音色分别说你好 =====
+                if (tryVoiceCommand(fromUserId, text, contextToken)) return;
+
+                // ===== 多工具协同规划（Agent）优先于小红书单意图 =====
+                // "我明天要去南京游玩一天" → 天气+穿搭+美食+行程综合回答；
+                // 如果先走小红书触发，会被截胡成"搜南京旅游攻略"，丢了天气查询。
+                // tryPlan 只对"≥2 个领域"的多意图返回非 null；单意图（南京美食/苏州天气）返回 null 继续往下走。
+                try {
+                    String planResult = agentPlanner.tryPlan(text);
+                    if (planResult != null) {
+                        System.out.println("[路由] 链路0.5-多工具协同：" + truncate(planResult, 60));
+                        sendTextReply(fromUserId, planResult, contextToken);
+                        return;
+                    }
+                } catch (Exception e) {
+                    // AgentPlanner 内部已容错；这里兜底，异常不阻断后续单意图路由
+                    System.err.println("[路由] 多工具协同异常（降级继续单意图）: " + e.getClass().getSimpleName());
                 }
 
-                String reply = doAiChat(fromUserId, text);
+                // ===== 小红书实时采集：发"XX美食/XX穿搭/XX攻略" → 实时搜索小红书 =====
+                // 触发要求（满足任一）：
+                //  ① 命中明确咨询词（攻略/穿搭/美食/演唱会/吃什么等）→ 直接触发（含"哈哈/笑话"的闲聊除外）
+                //  ② 带城市 + 含主题/咨询意图词（"苏州有什么好吃的""苏州好玩吗"）
+                //     避免"今天去酒店开会""这个景点在哪""我打卡下班了"这类闲聊误触发。
+                boolean xhsHit = (XHS_GUIDE_PATTERN.matcher(text).find()
+                            && !text.contains("笑话") && !text.contains("哈哈"))
+                        || (text.length() >= 4
+                            && !text.contains("笑话") && !text.contains("哈哈")
+                            && WeatherBriefingSkill.findKnownCity(text) != null
+                            && text.matches(".*(美食|好吃|吃的|吃|穿搭|穿|旅游|旅行|好玩|玩|攻略|景点|推荐|什么|想去|要去|演唱会|打卡|种草|避雷|小吃|餐厅|路线|行程).*"));
+                if (xhsCollector != null && xhsCollector.isConfigured() && xhsHit) {
+                    if (handleXhsGuide(fromUserId, text, contextToken)) return;
+                }
+
+                // ===== RSS 订阅监控：用户发消息时加入活跃用户集合，后续有新攻略自动推送 =====
+                if (rssSkill != null) rssSkill.addActiveUser(fromUserId);
+
+                // 统一路由：Skill → RAG → LLM 兜底
+                String reply = routeMessage(fromUserId, text);
                 // ✅ 把触发消息的 contextToken 传给回复，避免用缓存 token
                 sendTextReply(fromUserId, reply, contextToken);
             } catch (Exception e) {
@@ -236,6 +405,196 @@ public class BotMain {
                 sendTextQuietly(fromUserId, errorReply, contextToken);
             }
         });
+    }
+
+    /**
+     * 小红书实时采集：识别"南京美食 / 演唱会攻略 / 夏天穿搭"等意图。
+     * <p>重要：iLink 协议一条消息只能回一次——所以<b>不发占位</b>，
+     * 静默等待采集完成后只发<b>一条</b>最终结果。用户等待 1~2 分钟无回应属正常。
+     */
+    private boolean handleXhsGuide(String fromUserId, String text, String contextToken) throws IOException {
+        String keyword = buildXhsKeyword(fromUserId, text);
+        if (keyword == null) return false;
+
+        System.out.println("[小红书] 采集指令: " + truncate(text, 40) + " → 关键词「" + keyword + "」");
+        // 异步采集（不阻塞消息循环），完成后只发一条结果
+        // 一次外部请求触发一次采集；脚本内部可能瞬时超时/退出码非 0 → 由 XhsCollector 自带 1 次重试
+        replyExecutor.submit(() -> {
+            try {
+                String result = xhsCollector.search(keyword);
+                System.out.println("[小红书] 采集完成 " + result.length() + " 字符");
+                sendTextReply(fromUserId, result, contextToken);
+            } catch (Exception e) {
+                // 屏蔽所有底层异常细节（IOException / RuntimeException / Python traceback），
+                // 只给用户友好提示。stderr 仅记录类型，绝不打 detail / 堆栈 / 解码后的 raw JSON。
+                System.err.println("[小红书] 采集失败（已屏蔽细节）: " + e.getClass().getSimpleName());
+                sendTextQuietly(fromUserId,
+                        "😅 暂时没有获取到相关攻略内容，请稍后再试～\n（若多次失败，可能是小红书登录状态过期，更新 cookie 即可）",
+                        contextToken);
+            }
+        });
+        return true;
+    }
+
+    /**
+     * 从消息里构建小红书搜索关键词。
+     * 城市优先级：文本里的城市 → 该用户之前说过"XX天气"记住的城市 → 全局默认城市。
+     * 保证返回的关键词一定带城市，绝不裸搜"美食/攻略"这种全国泛内容（否则返回一堆无关链接）。
+     */
+    private String buildXhsKeyword(String userId, String text) {
+        if (text == null) return null;
+        String city = WeatherBriefingSkill.findKnownCity(text);
+        if (city == null) city = userCities.getOrDefault(userId, configDefaultCity);
+        java.util.regex.Matcher tm = XHS_TOPIC_PATTERN.matcher(text);
+        String topic = tm.find() ? tm.group(1) : null;
+        // 没匹配到标准主题词时做语义映射："苏州有什么好吃的"→美食，"苏州好玩"→旅游
+        if (topic == null) {
+            if (text.contains("好吃") || text.contains("吃的") || text.contains("吃")) topic = "美食";
+            else if (text.contains("穿") || text.contains("穿搭")) topic = "穿搭";
+            else if (text.contains("玩") || text.contains("景点") || text.contains("旅游")) topic = "旅游";
+        }
+        if (city != null && topic != null) return city + topic;
+        if (city != null) return city + "旅游攻略";
+        return null; // 无城市无主题 → 不触发
+    }
+
+    /**
+     * 处理"用X音色说YY"（单音色）和"用三个音色分别说YY"（循环 3 音色）指令。
+     * 命中返回 true（已处理），未命中返回 false（继续走正常路由）。
+     */
+    private boolean tryVoiceCommand(String fromUserId, String text, String contextToken) {
+        if (!voiceReplyEnabled || text == null) return false;
+
+        // ===== 三个音色分别说一遍 =====
+        Matcher mv = MULTI_VOICE_PATTERN.matcher(text);
+        if (mv.find()) {
+            // 去掉"一遍/一下/一次"等量词残留："说一遍你好" → "你好"
+            String content = mv.group(1).trim().replaceFirst("^(一遍|一下|一次|两遍)", "").trim();
+            if (!content.isEmpty()) {
+                System.out.println("多音色朗读指令：" + truncate(content, 40));
+                String[] voices = {"longanyang", "longxiaochun", "longchen"};
+                String[] names = {"龙安洋", "龙小淳", "龙成"};
+                for (int i = 0; i < voices.length; i++) {
+                    try {
+                        byte[] audio = dashScopeClient.textToSpeech(content, voices[i]);
+                        client.sendFileWithContext(fromUserId, audio, "语音-" + names[i] + ".mp3", null, contextToken);
+                        System.out.println("✅ 已用音色「" + names[i] + "」发送语音 → " + fromUserId);
+                    } catch (Exception ex) {
+                        System.err.println("音色「" + names[i] + "」合成失败：" + ex.getMessage());
+                    }
+                }
+                return true;
+            }
+        }
+
+        // ===== 指定单个音色 =====
+        Matcher sv = USE_VOICE_PATTERN.matcher(text);
+        if (sv.find()) {
+            String voiceId = VoiceProfileSkill.resolveVoiceId(sv.group(1));
+            String content = sv.group(2).trim();
+            if (voiceId != null && !content.isEmpty()) {
+                System.out.println("指定音色指令：" + voiceId + " → " + truncate(content, 40));
+                try {
+                    byte[] audio = dashScopeClient.textToSpeech(content, voiceId);
+                    client.sendFileWithContext(fromUserId, audio, "语音回复.mp3", null, contextToken);
+                    System.out.println("✅ 已用音色「" + voiceId + "」发送语音 → " + fromUserId);
+                } catch (Exception ex) {
+                    System.err.println("指定音色 TTS 失败：" + ex.getMessage());
+                    sendTextQuietly(fromUserId, "语音合成失败：" + ex.getMessage(), contextToken);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 完整消息路由逻辑，区分三种链路：
+     * <ol>
+     *   <li><b>Skill 执行链路</b>：命中 Skill 工具（天气/翻译/计算/单位换算）→ 直接返回工具执行结果；</li>
+     *   <li><b>RAG 增强回答链路</b>：未命中 Skill 且 enableRag=true → 关键词检索本地文档，
+     *       命中片段拼入 Prompt 后交给大模型生成回答；</li>
+     *   <li><b>LLM 闲聊兜底链路</b>：Skill、RAG 都未命中 → 直接调用大模型闲聊回复。</li>
+     * </ol>
+     *
+     * @param userId 用户 ID（用于对话历史隔离）
+     * @param text   用户消息
+     * @return 最终回复文本
+     */
+    private String routeMessage(String userId, String text) throws IOException {
+        // ===== 城市记忆：文本里提到已知城市 → 记住该用户所在城市；
+        //       之后"要不要带伞/穿什么"没带城市时，用它而不是全局默认城市 =====
+        String cityHint = WeatherBriefingSkill.findKnownCity(text);
+        if (cityHint != null) {
+            userCities.put(userId, cityHint);
+        }
+        String userCity = userCities.getOrDefault(userId, configDefaultCity);
+        if (!configDefaultCity.equals(userCity)) {
+            // 该用户记住了别的城市 → 临时切换天气默认城市（内存级，只影响后续天气查询）
+            weather.setDefaultCity(userCity);
+            weatherBriefingSkill.setDefaultCity(userCity);
+        }
+
+        // ===== 链路 0：专注计时（带 userId 状态，优先级最高）=====
+        String focusResult = focusTimerSkill.tryHandle(userId, text);
+        if (focusResult != null) {
+            System.out.println("[路由] 链路0-FocusTimer：" + truncate(focusResult, 50));
+            return focusResult;
+        }
+
+        // ===== 链路 0.5：多工具协同规划（Agent 自主拆解 → 顺序调用多个 Skill → LLM 整合）=====
+        String planResult = agentPlanner.tryPlan(text);
+        if (planResult != null) {
+            System.out.println("[路由] 链路0.5-多工具协同：" + truncate(planResult, 60));
+            return planResult;
+        }
+
+        // ===== 链路 1：Skill 工具执行 =====
+        String skillResult = skillRegistry.tryAll(text);
+        if (skillResult != null) {
+            System.out.println("[路由] 链路1-Skill 执行：" + truncate(skillResult, 50));
+            return skillResult;
+        }
+
+        // ===== 链路 2：RAG 关键词检索增强 =====
+        if (enableRag && localRag != null) {
+            String context = localRag.search(text);
+            if (context != null && !context.isEmpty()) {
+                System.out.println("[路由] 链路2-RAG 增强：命中 " + context.length() + " 字参考资料");
+                return doAiChatWithContext(userId, text, context);
+            }
+        }
+
+        // ===== 链路 3：LLM 闲聊兜底 =====
+        System.out.println("[路由] 链路3-LLM 闲聊兜底");
+        return doAiChat(userId, text);
+    }
+
+    /** RAG 增强版对话：把检索到的文档片段作为"参考资料"拼入 Prompt 再交给大模型 */
+    private String doAiChatWithContext(String userId, String userText, String context) throws IOException {
+        List<Map<String, String>> history = chatHistories.computeIfAbsent(userId, k -> new ArrayList<>());
+        synchronized (history) {
+            List<Map<String, String>> messages = new ArrayList<>();
+            if (systemPrompt != null && !systemPrompt.isEmpty()) {
+                messages.add(chatMessage("system", systemPrompt));
+            }
+            messages.add(chatMessage("system",
+                    "【参考资料】\n" + context
+                            + "\n\n请优先依据参考资料回答用户问题；参考资料中没有的信息，请如实说明你不知道，不要编造。"));
+            messages.addAll(history);
+            messages.add(chatMessage("user", userText));
+
+            String reply = aiClient.chat(messages);
+
+            history.add(chatMessage("user", userText));
+            history.add(chatMessage("assistant", reply));
+
+            int maxItems = maxHistoryTurns * 2;
+            while (history.size() > maxItems) {
+                history.remove(0);
+            }
+            return reply;
+        }
     }
 
     /** ✅ 修复：图片消息增加 contextToken */
@@ -282,18 +641,11 @@ public class BotMain {
                 }
                 System.out.println("语音已转文字：" + truncate(voiceText, 80));
 
-                // ===== 天气意图：语音问天气也走真实数据（Open-Meteo），
-                //      交给 Weather.tryHandle 一站式处理，避免大模型幻觉 =====
-                String weatherText = weather.tryHandle(voiceText);
-                if (weatherText != null) {
-                    System.out.println("语音天气查询成功：" + truncate(weatherText, 60));
-                    if (!tryVoiceReply(fromUserId, weatherText, contextToken)) {
-                        sendTextReply(fromUserId, weatherText, contextToken);
-                    }
-                    return;
-                }
+                // ===== 语音指令同样支持：用龙小淳说你好 / 用三个音色分别说你好（语音路径之前漏了）=====
+                if (tryVoiceCommand(fromUserId, voiceText, contextToken)) return;
 
-                String reply = doAiChat(fromUserId, voiceText);
+                // 统一路由：Skill → RAG → LLM 兜底（语音问天气/翻译/计算/单位换算同样生效）
+                String reply = routeMessage(fromUserId, voiceText);
 
                 // ✅ 如果开启了语音回复
                 if (!tryVoiceReply(fromUserId, reply, contextToken)) {
@@ -467,6 +819,18 @@ public class BotMain {
         }
         if (weather != null) {
             try { weather.close(); } catch (Exception ignore) {}
+        }
+        if (translator != null) {
+            try { translator.close(); } catch (Exception ignore) {}
+        }
+        if (rssSkill != null) {
+            try { rssSkill.close(); } catch (Exception ignore) {}
+        }
+        if (xhsCollector != null) {
+            try { xhsCollector.close(); } catch (Exception ignore) {}
+        }
+        if (calculator != null) {
+            try { calculator.close(); } catch (Exception ignore) {}
         }
         replyExecutor.shutdownNow();
     }

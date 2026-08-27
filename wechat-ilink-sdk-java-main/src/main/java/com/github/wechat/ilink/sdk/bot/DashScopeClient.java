@@ -98,6 +98,17 @@ public class DashScopeClient implements AutoCloseable {
      * @return 音频二进制内容
      */
     public byte[] textToSpeech(String text) throws IOException {
+        return textToSpeech(text, ttsVoice);
+    }
+
+    /**
+     * CosyVoice 文字转语音（指定音色，覆盖构造时的默认音色），返回音频字节（MP3）。
+     *
+     * @param text  要朗读的文本
+     * @param voice 音色 id（如 longanyang / longxiaochun / longchen），null 或空则用默认
+     * @return 音频二进制内容
+     */
+    public byte[] textToSpeech(String text, String voice) throws IOException {
         if (text == null || text.trim().isEmpty()) {
             throw new IOException("TTS 文本为空");
         }
@@ -105,8 +116,9 @@ public class DashScopeClient implements AutoCloseable {
         body.put("model", ttsModel);
         ObjectNode input = body.putObject("input");
         input.put("text", text.trim());
-        if (ttsVoice != null && !ttsVoice.isEmpty()) {
-            input.put("voice", ttsVoice);
+        String voiceId = (voice == null || voice.trim().isEmpty()) ? ttsVoice : voice.trim();
+        if (voiceId != null && !voiceId.isEmpty()) {
+            input.put("voice", voiceId);
         }
         input.put("format", "mp3");
         input.put("sample_rate", 24000);
@@ -119,7 +131,8 @@ public class DashScopeClient implements AutoCloseable {
         if (audioUrl == null || audioUrl.isEmpty()) {
             throw new IOException("TTS 未返回音频地址: " + resp);
         }
-        System.out.println("TTS 合成成功，音频 URL: " + truncate(audioUrl, 120));
+        System.out.println("TTS 合成成功（音色 " + (voiceId == null ? "默认" : voiceId)
+                + "），音频 URL: " + truncate(audioUrl, 120));
         return downloadBytes(audioUrl);
     }
 

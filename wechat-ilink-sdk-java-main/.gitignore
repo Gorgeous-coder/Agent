@@ -1,0 +1,27 @@
+# Large binaries / runtime deps - NOT tracked in git.
+# ffmpeg is ~140MB per exe, see README "ffmpeg ²¿Êð" section for manual setup.
+tools/
+
+# Build output
+target/
+out/
+*.class
+*.jar
+
+# IDE
+.idea/
+*.iml
+
+# Debug / runtime data
+dbg_de/
+dbg_trace/
+dbg_voice/
+redbook_data/
+rss-feeds.properties
+voice_profile.json
+routine_profile.json
+reminders.json
+
+# Sensitive config (cookie / api-key) - NEVER commit
+ai-bot.properties
+*.local.properties

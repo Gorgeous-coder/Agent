@@ -93,6 +93,7 @@ public class MessageProcessor {
             }
         }
 
+
         var result = new ProcessResult[1];
         String finalText = text;
 

@@ -1,18 +1,36 @@
 spring:
   application:
     name: Agent
+  data:
+    redis:
+      client-type: jedis
+      host: localhost
+      port: 6379
   ai:
     openai:
       api-key: ${SILICONFLOW_API_KEY:}
       base-url: https://api.siliconflow.cn/v1
       chat:
-        model: Qwen/Qwen3.5-35B-A3B
+        model: deepseek-ai/DeepSeek-V4-Flash
       image:
         model: Tongyi-MAI/Z-Image-Turbo
       audio:
         speech:
           model: "FunAudioLLM/CosyVoice2-0.5B"
           voice: "FunAudioLLM/CosyVoice2-0.5B:alex"
+      embedding:
+        model: BAAI/bge-m3  
+    vectorstore:
+      redis:
+        initialize-schema: true  
+        index-name: agent-kb-index
+        prefix: "agent-kb:"
 
 gaode:
   key: ${GAODE_KEY:}
+
+app:
+  storage:
+    root: ${STORAGE_ROOT:./data}
+  rag:
+    ingest-enabled: false

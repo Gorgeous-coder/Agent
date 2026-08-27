@@ -7,6 +7,7 @@ public record GeocodeResult(
         String formattedAddress,
         String province,
         String city,
+        String citycode,
         String district,
         double longitude,
         double latitude

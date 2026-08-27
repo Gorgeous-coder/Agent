@@ -1,10 +1,10 @@
-package com.group26.Agent;
+package com;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AgentApplicationTests {
+class YkdApplicationTest {
 
 	@Test
 	void contextLoads() {

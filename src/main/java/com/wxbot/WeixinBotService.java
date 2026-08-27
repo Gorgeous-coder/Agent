@@ -2,11 +2,13 @@ package com.wxbot;
 
 import tools.jackson.databind.ObjectMapper;
 import com.github.wechat.ilink.sdk.ILinkClient;
+import com.github.wechat.ilink.sdk.core.config.ILinkConfig;
 import com.github.wechat.ilink.sdk.core.context.ResumeContext;
 import com.github.wechat.ilink.sdk.core.exception.SessionExpiredException;
 import com.github.wechat.ilink.sdk.core.listener.OnLoginListener;
 import com.github.wechat.ilink.sdk.core.login.LoginContext;
 import com.github.wechat.ilink.sdk.core.model.WeixinMessage;
+import com.storage.FileStorageService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,7 @@ public class WeixinBotService {
 
     private final ObjectMapper objectMapper;
     private final MessageProcessor messageProcessor;
+    private final FileStorageService fileStorageService;
 
     private ILinkClient client;
     private final ExecutorService taskExecutor;
@@ -43,9 +46,12 @@ public class WeixinBotService {
 
     private volatile boolean running = true;
 
-    public WeixinBotService(ObjectMapper objectMapper, MessageProcessor messageProcessor) {
+    public WeixinBotService(ObjectMapper objectMapper,
+                            MessageProcessor messageProcessor,
+                            FileStorageService fileStorageService) {
         this.objectMapper = objectMapper;
         this.messageProcessor = messageProcessor;
+        this.fileStorageService = fileStorageService;
         this.taskExecutor = Executors.newFixedThreadPool(4, r -> {
             Thread t = new Thread(r, "wx-task-worker");
             t.setDaemon(true);
@@ -89,6 +95,7 @@ public class WeixinBotService {
         if (resumeContext != null) {
             try {
                 client = ILinkClient.builder()
+                        .config(ILinkConfig.builder().heartbeatIntervalMs(5000).build())
                         .onLogin(new OnLoginListener() {
                             @Override
                             public void onLoginSuccess(LoginContext ctx) {
@@ -111,6 +118,7 @@ public class WeixinBotService {
 
         try {
             client = ILinkClient.builder()
+                    .config(ILinkConfig.builder().heartbeatIntervalMs(5000).build())
                     .onLogin(new OnLoginListener() {
                         @Override
                         public void onLoginSuccess(LoginContext ctx) {
@@ -142,9 +150,8 @@ public class WeixinBotService {
                 }
                 base64Data = base64Data.replaceAll("\\s", "");
                 byte[] imageBytes = java.util.Base64.getDecoder().decode(base64Data);
-                Path qrPath = Paths.get("qrcode.png");
-                Files.write(qrPath, imageBytes);
-                log.info("✅ 二维码已保存到: {}", qrPath.toAbsolutePath());
+                String qrPath = fileStorageService.save(imageBytes, "qr", "qrcode.png");
+                log.info("✅ 二维码已保存到: {}", qrPath);
             } catch (Exception e) {
                 log.error("保存二维码失败: {}", e.getMessage());
                 log.info("二维码内容前200字符: {}", qrCodeContent.substring(0, Math.min(200, qrCodeContent.length())));

@@ -9,6 +9,7 @@ public record UserLocation(
         String userId,
         String address,
         String city,
+        String citycode,
         double longitude,
         double latitude,
         LocalDateTime updatedAt

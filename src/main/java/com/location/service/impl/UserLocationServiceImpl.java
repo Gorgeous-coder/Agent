@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.location.dto.GeocodeResult;
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
+import com.location.dto.TransitRouteResult;
 import com.location.model.UserLocation;
 import com.location.repository.UserLocationRepository;
 import com.location.service.AmapLocationService;
@@ -30,6 +31,7 @@ public class UserLocationServiceImpl implements UserLocationService {
                 userId,
                 geocode.formattedAddress(),
                 geocode.city(),
+                geocode.citycode(),
                 geocode.longitude(),
                 geocode.latitude(),
                 LocalDateTime.now()
@@ -86,6 +88,25 @@ public class UserLocationServiceImpl implements UserLocationService {
                 destinationPoint.longitude(),
                 destinationPoint.latitude(),
                 mode
+        );
+    }
+
+    @Override
+    public TransitRouteResult planTransitRoute(
+            String userId,
+            String destination,
+            int strategy
+    ) {
+        UserLocation origin = getCurrentLocation(userId);
+        GeocodeResult destinationPoint = amapLocationService.geocode(destination);
+        return amapLocationService.planTransitRoute(
+                origin.longitude(),
+                origin.latitude(),
+                destinationPoint.longitude(),
+                destinationPoint.latitude(),
+                origin.citycode(),
+                destinationPoint.citycode(),
+                strategy
         );
     }
 

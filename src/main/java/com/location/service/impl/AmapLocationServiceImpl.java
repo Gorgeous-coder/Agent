@@ -10,6 +10,7 @@ import tools.jackson.databind.ObjectMapper;
 import com.location.dto.GeocodeResult;
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
+import com.location.dto.TransitRouteResult;
 import com.location.service.AmapLocationService;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @SuppressWarnings("unused")
 public class AmapLocationServiceImpl
-        implements AmapLocationService {
+        implements AmapLocationService {//Amap = A‑Map，就是 高德地图
 
     private static final String GEOCODE_URL =
             "https://restapi.amap.com/v3/geocode/geo"
@@ -37,6 +38,10 @@ public class AmapLocationServiceImpl
             "https://restapi.amap.com/v3/direction/driving"
                     + "?key={key}&origin={origin}&destination={destination}"
                     + "&strategy=0&extensions=base";
+    private static final String TRANSIT_ROUTE_URL =
+            "https://restapi.amap.com/v3/direction/transit/integrated"
+                    + "?key={key}&origin={origin}&destination={destination}"
+                    + "&city={city}&cityd={cityd}&strategy={strategy}";
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -99,6 +104,9 @@ public class AmapLocationServiceImpl
             String city =
                     geocode.path("city").asString();
 
+            String citycode =
+                    geocode.path("citycode").asString();
+
             String district =
                     geocode.path("district").asString();
 
@@ -110,6 +118,7 @@ public class AmapLocationServiceImpl
                     formattedAddress,
                     province,
                     city,
+                    citycode,
                     district,
                     longitude,
                     latitude
@@ -269,6 +278,193 @@ public class AmapLocationServiceImpl
             );
             throw new RuntimeException("路线规划失败：" + e.getMessage());
         }
+    }
+
+    @Override
+    public TransitRouteResult planTransitRoute(
+            double originLongitude,
+            double originLatitude,
+            double destinationLongitude,
+            double destinationLatitude,
+            String citycode1,
+            String citycode2,
+            int strategy
+    ) {
+        int safeStrategy = normalizeStrategy(strategy);
+        String origin = coordinate(originLongitude, originLatitude);
+        String destination = coordinate(
+                destinationLongitude,
+                destinationLatitude
+        );
+        String originCitycode = citycode1 == null || citycode1.isBlank() ? "" : citycode1.trim();
+        String destCitycode = citycode2 == null || citycode2.isBlank() ? "" : citycode2.trim();
+
+        try {
+            String json = restTemplate.getForObject(//restTemplate是 Spring 自带的"通用 HTTP 请求工具"
+                    TRANSIT_ROUTE_URL,
+                    String.class,
+                    apiKey,
+                    origin,
+                    destination,
+                    originCitycode,
+                    destCitycode,
+                    safeStrategy
+            );
+            JsonNode root = readSuccessfulResponse(json, "公交路径规划");//设置异常时打印的接口名称，这样异常一路抛到工具层打日志时，一眼就能看出是哪个接口挂了，不用猜
+            JsonNode transits = root.path("route").path("transits");
+            if (!transits.isArray() || transits.isEmpty()) {
+                throw new RuntimeException("高德没有返回可用换乘方案");
+            }
+            // 临时调试：打印第一个方案的真实结构，确认 duration/distance 字段位置
+            log.info("[AmapLocation] 公交规划调试 transits[0] 结构: {}", transits.get(0).toString());
+
+            List<TransitRouteResult.TransitPlan> plans = new ArrayList<>();
+            for (JsonNode transit : transits) {
+                int duration = parseInt(nodeText(transit.path("duration")));
+                int distance = parseInt(nodeText(transit.path("distance")));
+                int fee = parseInt(nodeText(transit.path("cost")));
+
+                List<TransitRouteResult.Segment> segments = new ArrayList<>();
+                JsonNode segmentNodes = transit.path("segments");
+                if (segmentNodes.isArray()) {
+                    for (JsonNode segment : segmentNodes) {
+                        segments.addAll(parseSegment(segment));
+                    }
+                }
+                plans.add(new TransitRouteResult.TransitPlan(
+                        duration,
+                        distance,
+                        fee,
+                        List.copyOf(segments)
+                ));
+            }
+
+            log.info(
+                    "[AmapLocation] 公交路径规划成功: strategy={}, plans={}",
+                    safeStrategy,
+                    plans.size()
+            );
+            return new TransitRouteResult(List.copyOf(plans));
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error(
+                    "[AmapLocation] 公交路径规划异常: strategy={}, error={}",
+                    safeStrategy,
+                    e.getMessage(),
+                    e
+            );
+            throw new RuntimeException("公交路径规划失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 解析公交方案中的一段行程，可能拆成 0~2 个 Segment：
+     * 步行段（walking）、地铁/公交段（bus）、高铁段（railway）。
+     */
+    private List<TransitRouteResult.Segment> parseSegment(JsonNode segment) {
+        List<TransitRouteResult.Segment> result = new ArrayList<>();
+
+        JsonNode walking = segment.path("walking");
+        if (walking.isObject() && !walking.isNull()) {
+            String distance = nodeText(walking.path("distance"));
+            if (!distance.isBlank()) {
+                result.add(new TransitRouteResult.Segment(
+                        "walking",
+                        "步行",
+                        "步行 " + distance + " 米"
+                ));
+            }
+        }
+
+        JsonNode busLines = segment.path("bus").path("buslines");
+        if (busLines.isArray()) {
+            for (JsonNode busLine : busLines) {
+                String lineName = nodeText(busLine.path("name"));
+                String departStop = nodeText(
+                        busLine.path("departure_stop").path("name")
+                );
+                String arrivalStop = nodeText(
+                        busLine.path("arrival_stop").path("name")
+                );
+                if (!lineName.isBlank()) {
+                    result.add(new TransitRouteResult.Segment(
+                            "bus",
+                            lineName,
+                            departStop + " → " + arrivalStop
+                    ));
+                }
+            }
+        }
+
+        JsonNode railway = segment.path("railway");
+        if (railway.isObject() && !railway.isNull()) {
+            String trip = nodeText(railway.path("trip"));
+            String departName = nodeText(
+                    railway.path("departure_stop").path("name")
+            );
+            String arrivalName = nodeText(
+                    railway.path("arrival_stop").path("name")
+            );
+            String departTime = nodeText(
+                    railway.path("departure_stop").path("time")
+            );
+            String arrivalTime = nodeText(
+                    railway.path("arrival_stop").path("time")
+            );
+            if (!trip.isBlank()) {
+                result.add(new TransitRouteResult.Segment(
+                        "railway",
+                        trip + " 次" + (railwayType(railway)),
+                        departName + " " + formatTime(departTime)
+                                + " → " + arrivalName + " " + formatTime(arrivalTime)
+                ));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 高德车次类型转中文：2011=高铁，2012=动车，2013=城际，2014=直达特快，其余=火车。
+     */
+    private String railwayType(JsonNode railway) {
+        String type = nodeText(railway.path("type"));
+        return switch (type) {
+            case "2011" -> "高铁";
+            case "2012" -> "动车";
+            case "2013" -> "城际";
+            case "2014" -> "直达特快";
+            default -> "火车";
+        };
+    }
+
+    /**
+     * 高德时间格式 HHmm，可能大于 24 表示跨天，转成 HH:mm 展示。
+     */
+    private String formatTime(String time) {
+        if (time == null || time.isBlank()) {
+            return "";
+        }
+        String t = time.trim();
+        if (t.length() < 4) {
+            return t;
+        }
+        int minutes = Integer.parseInt(t) % 1440;
+        return String.format(Locale.ROOT, "%02d:%02d", minutes / 60, minutes % 60);
+    }
+
+    /**
+     * v3 公交接口的 strategy 只支持 0/1/2/3/5；v5 的 7(地铁优先)/8(时间短) 回退到 0(最快捷)。
+     */
+    private int normalizeStrategy(int strategy) {
+        if (strategy == 7 || strategy == 8) {
+            return 0;
+        }
+        if (strategy < 0 || strategy > 5) {
+            return 0;
+        }
+        return strategy;
     }
 
     private JsonNode readSuccessfulResponse(String json, String action) {

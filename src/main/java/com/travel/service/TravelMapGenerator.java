@@ -22,7 +22,7 @@ public class TravelMapGenerator {
 
     public TravelMapGenerator(
             ObjectMapper objectMapper,
-            @Value("${gaode.js-key:}") String amapKey
+            @Value("${gaode.js-key:0e7a0d2baaaad0a062909205fa5b82f4}") String amapKey
     ) {
         this.objectMapper = objectMapper;
         this.amapKey = amapKey;
@@ -32,7 +32,7 @@ public class TravelMapGenerator {
         try {
             String template = loadTemplate();
             String json = objectMapper.writeValueAsString(data);
-            String title = data.getDestination() + "三日游";
+            String title = data.getDestination() + "旅游路线图";
 
             return template
                     .replace("__TRAVEL_DATA__", json)
@@ -45,7 +45,12 @@ public class TravelMapGenerator {
         }
     }
 
-    private String loadTemplate() throws IOException {
+    // ⭐ 新增：加载模板（供页面入口使用）
+    public String loadTemplate() throws IOException {
+        return loadTemplateContent();
+    }
+
+    private String loadTemplateContent() throws IOException {
         try (InputStream is = new ClassPathResource(TEMPLATE_PATH).getInputStream()) {
             return new String(is.readAllBytes(), StandardCharsets.UTF_8);
         }

@@ -149,19 +149,38 @@ public class MessageProcessor {
                     String prompt = (finalText != null && !finalText.isBlank()) ? finalText : "请详细描述这张图片";
                     reply = imageAnalysisTool.analyzeImage(prompt, imageBytes);
                 } else {
-                    // ✅ 传入 userId，让 LlmServiceImpl 能保存历史
                     reply = llmService.chat(finalText, List.of(), deepseekClient, fromUserId);
                 }
 
                 long elapsed = System.currentTimeMillis() - start;
                 log.info("[Processor] 处理成功: elapsed={}ms, userId={}", elapsed, fromUserId);
 
+                // ⭐⭐⭐ 核心修改：只有明确要语音才返回语音 ⭐⭐⭐
                 ProcessResult voiceResult = voiceQueue.poll();
                 if (voiceResult != null) {
-                    result[0] = voiceResult;
-                    return;
+                    boolean wantsVoice = false;
+                    if (finalText != null && !finalText.isBlank()) {
+                        String lowerText = finalText.toLowerCase();
+                        wantsVoice = lowerText.contains("语音") ||
+                                lowerText.contains("播报") ||
+                                lowerText.contains("说一遍") ||
+                                lowerText.contains("念一遍") ||
+                                lowerText.contains("读一遍");
+                    }
+
+                    if (wantsVoice) {
+                        log.info("[Processor] 🎤 用户明确要求语音，返回语音");
+                        result[0] = voiceResult;
+                        return;
+                    } else {
+                        log.info("[Processor] 📝 跳过语音，返回文字");
+                        String textReply = voiceResult.text() != null ? voiceResult.text() : "已生成结果";
+                        result[0] = ProcessResult.text(textReply, fromUserId);
+                        return;
+                    }
                 }
 
+                // 检查是否有图片
                 String cachedUrl = ImageTools.lastGeneratedImageUrl;
                 if (cachedUrl != null) {
                     ImageTools.lastGeneratedImageUrl = null;
@@ -179,9 +198,7 @@ public class MessageProcessor {
                 log.error("[Processor] 处理失败: elapsed={}ms, userId={}, error={}", elapsed, fromUserId, e.getMessage(), e);
                 result[0] = ProcessResult.text("处理请求时发生错误：" + e.getMessage(), fromUserId);
             }
-        });
-
-        return result[0];
+        });return result[0];
     }
 
     /**

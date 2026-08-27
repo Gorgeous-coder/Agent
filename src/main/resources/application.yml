@@ -22,29 +22,37 @@ spring:
       maximum-pool-size: 1
   sql:
     init:
-      # ✅ 改为 always，让 Spring Boot 启动时自动执行 schema.sql 建表
       mode: always
-      # ✅ 指定 schema 文件位置
       schema-locations: classpath:sqlite/schema.sql
 
 # ========== MyBatis 配置 ==========
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  # ✅ 指定 Mapper 文件位置（如果使用 XML 方式）
   mapper-locations: classpath:mapper/*.xml
-  # ✅ 指定实体类包路径（用于别名）
   type-aliases-package: com.rag.model
 
 # ========== RAG 配置 ==========
 app:
   rag:
-    # ✅ 控制启动时是否自动入库知识库文档
     ingest-enabled: false
 
-# ========== 日志配置（方便调试） ==========
+# ========== Web Search 配置 ==========
+web-search:
+  enabled: true
+  api-key: ${SERPAPI_KEY:}
+  engine: google
+  max-results: 5
+  timeout-seconds: 15
+
+# ========== 日志配置 ==========
 logging:
   level:
     com.rag: DEBUG
     com.llm.rag: DEBUG
     org.springframework.ai: DEBUG
+
+# ========== ⭐ 高德地图配置 ==========
+gaode:
+  key: 4ab9d0afea3e5df70840f50706f536d8
+  js-key: 0e7a0d2baaaad0a062909205fa5b82f4

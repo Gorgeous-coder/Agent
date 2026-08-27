@@ -13,6 +13,8 @@ import com.location.dto.RouteResult;
 import com.location.dto.TransitRouteResult;
 import com.location.service.AmapLocationService;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +25,9 @@ import java.util.Locale;
 @SuppressWarnings("unused")
 public class AmapLocationServiceImpl
         implements AmapLocationService {//Amap = A‑Map，就是 高德地图
+
+    private static final String PLACE_SEARCH_URL =
+            "https://restapi.amap.com/v3/place/text?key={key}&keywords={keyword}&city={city}&citylimit=true&offset=1&page=1&extensions=base";
 
     private static final String GEOCODE_URL =
             "https://restapi.amap.com/v3/geocode/geo"
@@ -54,7 +59,7 @@ public class AmapLocationServiceImpl
         if (address == null || address.isBlank()) {
             throw new RuntimeException("地址不能为空");
         }
-
+        log.info("[AmapLocation] 使用的 Key: {}", apiKey);
         String cleanedAddress = address.trim();
 
         try {
@@ -276,6 +281,58 @@ public class AmapLocationServiceImpl
                     e
             );
             throw new RuntimeException("路线规划失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 关键字搜索景点（比地理编码更智能）
+     */
+    @Override
+    public GeocodeResult searchPlace(String keyword, String city) {
+        try {
+            String encodedKeyword = URLEncoder.encode(keyword, StandardCharsets.UTF_8.name());
+            String encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.name());
+
+            String url = PLACE_SEARCH_URL
+                    .replace("{key}", apiKey)
+                    .replace("{keyword}", encodedKeyword)
+                    .replace("{city}", encodedCity);
+
+            log.info("[AmapLocation] 关键字搜索: keyword={}, city={}", keyword, city);
+
+            String json = restTemplate.getForObject(url, String.class);
+            JsonNode root = objectMapper.readTree(json);
+
+            if (!"1".equals(root.path("status").asString())) {
+                String info = root.path("info").asString();
+                log.warn("[AmapLocation] 关键字搜索失败: {} - {}", keyword, info);
+                return null;
+            }
+
+            JsonNode pois = root.path("pois");
+            if (pois.isArray() && pois.size() > 0) {
+                JsonNode poi = pois.get(0);
+                String location = poi.path("location").asString();
+                if (location == null || location.isBlank()) {
+                    return null;
+                }
+                String[] coords = location.split(",");
+                if (coords.length != 2) {
+                    return null;
+                }
+                return new GeocodeResult(
+                        poi.path("name").asString(),
+                        poi.path("pname").asString(),
+                        poi.path("cityname").asString(),
+                        poi.path("adcode").asString(),
+                        Double.parseDouble(coords[0]),
+                        Double.parseDouble(coords[1])
+                );
+            }
+            return null;
+        } catch (Exception e) {
+            log.warn("[AmapLocation] 关键字搜索异常: {} - {}", keyword, e.getMessage());
+            return null;
         }
     }
 

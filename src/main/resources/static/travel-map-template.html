@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能旅游规划 - 行程地图</title>
+
+    <!-- 高德地图 JS API -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=0e7a0d2baaaad0a062909205fa5b82f4"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .control-panel {
+            background: white;
+            padding: 24px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .control-panel h2 {
+            font-size: 22px;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-panel h2 span {
+            font-size: 28px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 10px 16px;
+            border: 2px solid #e8ecf1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #4a6cf7;
+        }
+
+        .input-group input[type="text"] {
+            width: 180px;
+        }
+
+        .input-group input[type="number"] {
+            width: 70px;
+            text-align: center;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .btn-generate {
+            padding: 10px 28px;
+            background: #4a6cf7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-generate:hover {
+            background: #3a5cd5;
+        }
+
+        .btn-generate:active {
+            transform: scale(0.97);
+        }
+
+        .btn-generate:disabled {
+            background: #b0b8c8;
+            cursor: not-allowed;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .map-wrapper {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: 500px;
+        }
+
+        #map-container {
+            width: 100%;
+            height: 600px;
+        }
+
+        .plan-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .plan-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .plan-wrapper::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        .plan-empty {
+            text-align: center;
+            color: #999;
+            padding: 60px 20px;
+        }
+
+        .plan-empty .icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .plan-empty h3 {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .plan-empty p {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .day-card {
+            background: #f8f9fc;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            border-left: 4px solid #4a6cf7;
+            transition: box-shadow 0.2s;
+        }
+
+        .day-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .day-card:hover {
+            box-shadow: 0 2px 12px rgba(74, 108, 247, 0.12);
+        }
+
+        .day-card .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .day-card .day-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .day-card .day-badge {
+            background: #4a6cf7;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+
+        .day-card .attraction-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eef0f4;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .day-card .attraction-item:last-child {
+            border-bottom: none;
+        }
+
+        .day-card .attraction-item:hover {
+            background: #eef0f7;
+            margin: 0 -8px;
+            padding-left: 8px;
+            padding-right: 8px;
+            border-radius: 6px;
+        }
+
+        .day-card .attraction-item .num {
+            font-weight: 700;
+            color: #4a6cf7;
+            font-size: 14px;
+            min-width: 24px;
+        }
+
+        .day-card .attraction-item .info {
+            flex: 1;
+        }
+
+        .day-card .attraction-item .name {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a1a2e;
+        }
+
+        .day-card .attraction-item .desc {
+            font-size: 13px;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        .day-card .attraction-item .duration {
+            font-size: 12px;
+            color: #999;
+            background: #eef0f4;
+            padding: 2px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        .day-card .route-info {
+            font-size: 12px;
+            color: #4a6cf7;
+            background: #eef4ff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+            margin-left: 8px;
+        }
+
+        .day-card .day-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e8ecf1;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .day-card .day-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4a6cf7;
+        }
+
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e8ecf1;
+            border-top-color: #4a6cf7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-msg {
+            background: #fee;
+            color: #c0392b;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #c0392b;
+        }
+
+        .tips-box {
+            background: #f0f7ff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-left: 4px solid #4a6cf7;
+        }
+
+        .tips-box .tip-item {
+            font-size: 13px;
+            color: #555;
+            padding: 3px 0;
+        }
+
+        @media (max-width: 768px) {
+            .control-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .input-group {
+                flex-wrap: wrap;
+            }
+            .input-group input[type="text"] {
+                flex: 1;
+                min-width: 120px;
+            }
+            #map-container {
+                height: 350px;
+            }
+            .plan-wrapper {
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== 控制面板 ===== -->
+    <div class="control-panel">
+        <h2>
+            <span>✈️</span> 智能旅游规划
+        </h2>
+        <div class="input-group">
+            <input type="text" id="destination" placeholder="输入目的地，如苏州" value="南京">
+            <input type="number" id="days" value="3" min="1" max="7">
+            <label for="days">天</label>
+            <select id="preferences">
+                <option value="">偏好</option>
+                <option value="经典景点">经典景点</option>
+                <option value="美食">美食</option>
+                <option value="小众景点">小众景点</option>
+                <option value="休闲度假">休闲度假</option>
+                <option value="历史文化">历史文化</option>
+            </select>
+            <button class="btn-generate" onclick="generatePlan()">
+                <span>🚀</span> 生成计划
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== 地图 + 行程双栏 ===== -->
+    <div class="content-grid">
+        <div class="map-wrapper">
+            <div id="map-container"></div>
+        </div>
+
+        <div class="plan-wrapper" id="plan-wrapper">
+            <div class="plan-empty" id="plan-empty">
+                <div class="icon">🗺️</div>
+                <h3>输入目的地，生成行程</h3>
+                <p>输入目的地和天数，点击「生成计划」<br>AI 将自动为你规划路线并显示在地图上</p>
+            </div>
+            <div id="trip-plan" style="display:none;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ============================================================
+    // 1. 初始化高德地图
+    // ============================================================
+    var map = null;
+    var markers = [];
+    var polylines = [];
+    var infoWindows = [];
+
+    function initMap() {
+        if (typeof AMap === 'undefined') {
+            console.error('❌ 高德地图 JS API 未加载');
+            return;
+        }
+
+        map = new AMap.Map('map-container', {
+            zoom: 12,
+            center: [118.78, 32.06],
+            mapStyle: 'amap://styles/whitesmoke',
+            viewMode: '2D'
+        });
+
+        AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.MapType'], function() {
+            map.addControl(new AMap.ToolBar());
+            map.addControl(new AMap.Scale());
+        });
+
+        console.log('✅ 高德地图初始化完成');
+    }
+
+    window.onload = function() {
+        initMap();
+        // 自动加载默认行程
+        //setTimeout(generatePlan, 500);
+    };
+
+    // ============================================================
+    // 2. 生成旅游计划（调用 AI 接口）
+    // ============================================================
+    function generatePlan() {
+        var destination = document.getElementById('destination').value.trim();
+        var days = parseInt(document.getElementById('days').value) || 3;
+        var preferences = document.getElementById('preferences').value;
+
+        if (!destination) {
+            alert('请输入目的地');
+            return;
+        }
+
+        var emptyEl = document.getElementById('plan-empty');
+        var planEl = document.getElementById('trip-plan');
+        emptyEl.style.display = 'none';
+        planEl.style.display = 'block';
+        planEl.innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>🤖 AI 正在规划 ${destination} ${days} 日游...</p>
+            </div>
+        `;
+
+        var btn = document.querySelector('.btn-generate');
+        btn.disabled = true;
+        btn.innerHTML = '⏳ 生成中...';
+
+        // ⭐ 使用 AI 接口
+        var url = '/travel/ai/plan?destination=' + encodeURIComponent(destination) + '&days=' + days;
+        if (preferences) {
+            url += '&preferences=' + encodeURIComponent(preferences);
+        }
+
+        console.log('📤 请求: ' + url);
+
+        fetch(url)
+            .then(function(res) {
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status + ': ' + res.statusText);
+                }
+                return res.json();
+            })
+            .then(function(data) {
+                console.log('✅ 收到数据:', data);
+                renderTripPlan(data);
+                renderMap(data);
+            })
+            .catch(function(err) {
+                console.error('❌ 生成失败:', err);
+                planEl.innerHTML = `
+                    <div class="error-msg">
+                        <strong>❌ 生成失败</strong><br>
+                        ${err.message}
+                        <br><br>
+                        <button onclick="generatePlan()" style="padding:8px 20px;background:#4a6cf7;color:white;border:none;border-radius:6px;cursor:pointer;">
+                            🔄 重试
+                        </button>
+                    </div>
+                `;
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<span>🚀</span> 生成计划';
+            });
+    }
+
+    // ============================================================
+    // 3. 渲染行程卡片（含路线信息）
+    // ============================================================
+    function renderTripPlan(data) {
+        var container = document.getElementById('trip-plan');
+
+        if (!data || !data.days || data.days.length === 0) {
+            container.innerHTML = '<div class="error-msg">⚠️ 暂无行程数据，请重试</div>';
+            return;
+        }
+
+        var html = '';
+
+        // 显示目的地
+        if (data.destination) {
+            html += `<div style="font-size:18px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">
+                🏙️ ${data.destination} ${data.days ? data.days.length : ''}日游
+            </div>`;
+        }
+
+        data.days.forEach(function(day, index) {
+            var dayNum = day.day || index + 1;
+            html += '<div class="day-card">';
+            html += '<div class="day-header">';
+            html += '<span class="day-title">📅 第 ' + dayNum + ' 天</span>';
+            html += '<span class="day-badge">Day ' + (index + 1) + '</span>';
+            html += '</div>';
+
+            if (day.summary) {
+                html += '<div style="font-size:13px;color:#666;margin-bottom:10px;">' + day.summary + '</div>';
+            }
+
+            if (day.places && day.places.length > 0) {
+                day.places.forEach(function(place, i) {
+                    html += '<div class="attraction-item" onclick="flyToLocation(' + place.longitude + ', ' + place.latitude + ')">';
+                    html += '<span class="num">' + (i + 1) + '</span>';
+                    html += '<div class="info">';
+                    html += '<div class="name">📍 ' + place.name + '</div>';
+                    if (place.description) {
+                        html += '<div class="desc">' + place.description + '</div>';
+                    }
+                    html += '</div>';
+                    if (place.duration) {
+                        html += '<span class="duration">⏱️ ' + place.duration + '</span>';
+                    }
+                    html += '</div>';
+
+                    // 显示路线信息
+                    if (day.routes && day.routes.length > i) {
+                        var route = day.routes[i];
+                        var emojis = {'步行':'🚶','公交':'🚌','地铁':'🚇','打车':'🚕','驾车':'🚗'};
+                        var emoji = emojis[route.transportMode] || '🚶';
+                        html += '<div style="font-size:12px;color:#4a6cf7;padding-left:36px;padding-bottom:4px;">';
+                        html += '↓ ' + emoji + ' ' + route.transportMode + ' ' + (route.duration || '') + ' ' + (route.distance || '');
+                        html += '</div>';
+                    }
+                });
+            } else {
+                html += '<p style="color:#999;font-size:14px;">暂无景点安排</p>';
+            }
+
+            if (day.weather) {
+                html += '<div class="day-meta"><span>🌤️ ' + day.weather + '</span></div>';
+            }
+            html += '</div>';
+        });
+
+        // 显示小贴士
+        if (data.tips && data.tips.length > 0) {
+            html += '<div class="tips-box">';
+            html += '<div style="font-weight:600;font-size:14px;color:#1a1a2e;margin-bottom:6px;">💡 旅行小贴士</div>';
+            data.tips.forEach(function(tip) {
+                html += '<div class="tip-item">• ' + tip + '</div>';
+            });
+            html += '</div>';
+        }
+
+        container.innerHTML = html;
+    }
+
+    // ============================================================
+    // 4. 渲染地图标记和路线（含路线连接）
+    // ============================================================
+    function renderMap(data) {
+        // 清除旧标记和路线
+        markers.forEach(function(m) {
+            if (m && m.setMap) m.setMap(null);
+        });
+        polylines.forEach(function(p) {
+            if (p && p.setMap) p.setMap(null);
+        });
+        infoWindows.forEach(function(w) {
+            if (w && w.close) w.close();
+        });
+        markers = [];
+        polylines = [];
+        infoWindows = [];
+
+        if (!data || !data.days) {
+            console.warn('⚠️ 没有行程数据');
+            return;
+        }
+
+        if (!map) {
+            console.warn('⚠️ 地图未初始化');
+            return;
+        }
+
+        var allPoints = [];
+        var allMarkers = [];
+
+        // 颜色方案（按天数）
+        var colors = ['#4a6cf7', '#52c41a', '#faad14', '#eb2f96', '#722ed1'];
+
+        data.days.forEach(function(day, dayIndex) {
+            if (!day.places) return;
+
+            var dayPoints = [];
+            var dayMarkers = [];
+
+            day.places.forEach(function(place, placeIndex) {
+                // ⭐ 关键修复：确保经纬度是数字
+                var lng = parseFloat(place.longitude);
+                var lat = parseFloat(place.latitude);
+
+                // ⭐ 检查经纬度是否有效
+                if (isNaN(lng) || isNaN(lat) || (lng === 0 && lat === 0)) {
+                    console.warn('⚠️ 无效坐标，跳过:', place.name, 'lng=' + lng, 'lat=' + lat);
+                    return;
+                }
+
+                var point = [lng, lat];
+                allPoints.push(point);
+                dayPoints.push(point);
+
+                var color = colors[dayIndex % colors.length];
+
+                // 创建标记
+                var marker = new AMap.Marker({
+                    position: point,
+                    title: place.name,
+                    label: {
+                        content: '<div style="font-size:13px;font-weight:bold;color:#333;background:white;padding:2px 10px;border-radius:12px;border:2px solid ' + color + ';">' + (placeIndex + 1) + '. ' + place.name + '</div>',
+                        direction: 'top',
+                        offset: new AMap.Pixel(0, -8)
+                    },
+                    animation: 'AMAP_ANIMATION_DROP'
+                });
+                marker.setMap(map);
+                allMarkers.push(marker);
+                dayMarkers.push(marker);
+                markers.push(marker);
+
+                console.log('✅ 创建标记:', place.name, lng, lat);
+
+                // 信息窗口
+                var infoContent = '<div style="padding:6px 10px;max-width:220px;">';
+                infoContent += '<h4 style="margin:0 0 4px;">' + place.name + '</h4>';
+                if (place.description) {
+                    infoContent += '<p style="margin:2px 0;font-size:12px;color:#666;">' + place.description + '</p>';
+                }
+                if (place.duration) {
+                    infoContent += '<p style="margin:2px 0;font-size:12px;color:#999;">⏱️ ' + place.duration + '</p>';
+                }
+                if (place.type) {
+                    infoContent += '<p style="margin:2px 0;font-size:12px;color:#999;">🏷️ ' + place.type + '</p>';
+                }
+                infoContent += '</div>';
+
+                var infoWindow = new AMap.InfoWindow({
+                    content: infoContent,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                infoWindows.push(infoWindow);
+
+                marker.on('click', function() {
+                    infoWindow.open(map, point);
+                });
+            });
+
+            // 绘制当天的路线
+            if (day.routes && day.routes.length > 0) {
+                day.routes.forEach(function(route) {
+                    if (route.polyline && route.polyline.length > 1) {
+                        var path = route.polyline.map(function(p) {
+                            return [p.longitude, p.latitude];
+                        });
+
+                        // 过滤无效坐标
+                        path = path.filter(function(p) {
+                            return !isNaN(p[0]) && !isNaN(p[1]) && p[0] !== 0 && p[1] !== 0;
+                        });
+
+                        if (path.length < 2) return;
+
+                        var color = colors[dayIndex % colors.length];
+                        var polyline = new AMap.Polyline({
+                            path: path,
+                            strokeColor: color,
+                            strokeWeight: 5,
+                            strokeStyle: 'solid',
+                            strokeOpacity: 0.8,
+                            showDir: true,
+                            lineJoin: 'round',
+                            lineCap: 'round'
+                        });
+                        polyline.setMap(map);
+                        polylines.push(polyline);
+
+                        // 在路线中间添加交通方式标签
+                        if (path.length > 2) {
+                            var midIndex = Math.floor(path.length / 2);
+                            var midPoint = path[midIndex];
+                            var emojis = {'步行':'🚶','公交':'🚌','地铁':'🚇','打车':'🚕','驾车':'🚗'};
+                            var emoji = emojis[route.transportMode] || '🚶';
+
+                            var labelMarker = new AMap.Marker({
+                                position: midPoint,
+                                content: '<div style="background:' + color + ';color:white;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:bold;">' + emoji + ' ' + route.transportMode + '</div>',
+                                offset: new AMap.Pixel(0, -12)
+                            });
+                            labelMarker.setMap(map);
+                            markers.push(labelMarker);
+                        }
+                    }
+                });
+            } else if (dayPoints.length > 1) {
+                // 降级：如果没有 routes 数据，用直线连接
+                var validPoints = dayPoints.filter(function(p) {
+                    return !isNaN(p[0]) && !isNaN(p[1]) && p[0] !== 0 && p[1] !== 0;
+                });
+                if (validPoints.length > 1) {
+                    var polyline = new AMap.Polyline({
+                        path: validPoints,
+                        strokeColor: colors[dayIndex % colors.length],
+                        strokeWeight: 4,
+                        strokeStyle: 'dashed',
+                        strokeOpacity: 0.5,
+                        lineJoin: 'round',
+                        lineCap: 'round'
+                    });
+                    polyline.setMap(map);
+                    polylines.push(polyline);
+                }
+            }
+        });
+
+        // 调整地图视野
+        if (allMarkers.length > 0) {
+            map.setFitView(allMarkers, false, [60, 60, 60, 60]);
+        }
+
+        console.log('✅ 地图渲染完成: markers=' + allMarkers.length + ', polylines=' + polylines.length);
+    }
+
+    // ============================================================
+    // 5. 点击景点飞到对应位置
+    // ============================================================
+    function flyToLocation(lng, lat) {
+        if (!map) return;
+        var lngNum = parseFloat(lng);
+        var latNum = parseFloat(lat);
+        if (isNaN(lngNum) || isNaN(latNum)) return;
+        map.setZoomAndCenter(15, [lngNum, latNum], true, 1000);
+    }
+
+    // ============================================================
+    // 6. 按回车键触发生成
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        var input = document.getElementById('destination');
+        if (input) {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    generatePlan();
+                }
+            });
+        }
+
+        var daysInput = document.getElementById('days');
+        if (daysInput) {
+            daysInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    generatePlan();
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

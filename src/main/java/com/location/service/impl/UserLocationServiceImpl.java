@@ -3,7 +3,7 @@ package com.location.service.impl;
 import com.location.dto.TransitRouteResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.location.dto.GeocodeResult;
+import com.location.dto.GeocodeResult;        // ⭐ 用 location 包下的 record
 import com.location.dto.PlaceResult;
 import com.location.dto.RouteResult;
 import com.location.model.UserLocation;
@@ -29,10 +29,10 @@ public class UserLocationServiceImpl implements UserLocationService {
         GeocodeResult geocode = amapLocationService.geocode(address);
         UserLocation location = new UserLocation(
                 userId,
-                geocode.formattedAddress(),
-                geocode.city(),
-                geocode.longitude(),
-                geocode.latitude(),
+                geocode.formattedAddress(),  // ⭐ record 直接访问字段
+                geocode.city(),              // ⭐ record 直接访问字段
+                geocode.longitude(),         // ⭐ record 直接访问字段
+                geocode.latitude(),          // ⭐ record 直接访问字段
                 LocalDateTime.now()
         );
         userLocationRepository.save(location);
@@ -53,7 +53,7 @@ public class UserLocationServiceImpl implements UserLocationService {
                 ? "all"
                 : "base";
         return weatherService.getWeatherText(
-                location.city(),
+                location.city(),  // ⭐ 用 getter（如果是 @Data 类）
                 normalizedType
         );
     }
@@ -66,8 +66,8 @@ public class UserLocationServiceImpl implements UserLocationService {
     ) {
         UserLocation location = getCurrentLocation(userId);
         return amapLocationService.searchNearby(
-                location.longitude(),
-                location.latitude(),
+                location.longitude(),  // ⭐ 用 getter（如果是 @Data 类）
+                location.latitude(),   // ⭐ 用 getter（如果是 @Data 类）
                 keyword,
                 radiusMeters
         );
@@ -84,8 +84,8 @@ public class UserLocationServiceImpl implements UserLocationService {
         return amapLocationService.planRoute(
                 origin.longitude(),
                 origin.latitude(),
-                destinationPoint.longitude(),
-                destinationPoint.latitude(),
+                destinationPoint.longitude(),  // ⭐ record 直接访问字段
+                destinationPoint.latitude(),   // ⭐ record 直接访问字段
                 mode
         );
     }

@@ -1,6 +1,7 @@
 package com.llm.service.impl;
 
 import com.llm.service.ConversationHistoryService;
+import com.websearch.service.WebSearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.content.Media;
@@ -25,14 +26,15 @@ public class LlmServiceImpl implements LlmService {
     private final ImageAnalysisTool imageAnalysisTool;
     private final TranslatorTools translatorTools;
     private final ConversationHistoryService conversationHistoryService;
-
+    private final WebSearchTool webSearchTool;
     public LlmServiceImpl(WeatherTools weatherTools,
                           ImageTools imageTools,
                           VoiceTools voiceTools,
                           LocationTools locationTools,
                           ImageAnalysisTool imageAnalysisTool,
                           TranslatorTools translatorTools,
-                          ConversationHistoryService conversationHistoryService) {
+                          ConversationHistoryService conversationHistoryService,
+                          WebSearchTool webSearchTool) {
         this.weatherTools = weatherTools;
         this.imageTools = imageTools;
         this.voiceTools = voiceTools;
@@ -40,6 +42,7 @@ public class LlmServiceImpl implements LlmService {
         this.imageAnalysisTool = imageAnalysisTool;
         this.translatorTools = translatorTools;
         this.conversationHistoryService = conversationHistoryService;
+        this.webSearchTool = webSearchTool;
     }
 
     @Override
@@ -88,9 +91,10 @@ public class LlmServiceImpl implements LlmService {
                 }
             }
 
-            // ✅ 6. 注册工具
+            // ✅ 6. 注册工具（加上 webSearchTool）
             if (skillEnabled) {
-                promptBuilder.tools(weatherTools, imageTools, voiceTools, locationTools, imageAnalysisTool, translatorTools);
+                promptBuilder.tools(weatherTools, imageTools, voiceTools, locationTools,
+                        imageAnalysisTool, translatorTools, webSearchTool);  // ✅ 新增
             }
 
             // ✅ 7. 调用

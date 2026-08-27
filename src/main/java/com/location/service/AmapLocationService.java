@@ -11,6 +11,9 @@ public interface AmapLocationService {
 
     GeocodeResult geocode(String address);
 
+    // ⭐ 返回 GeocodeResult，不是 SearchResult
+    GeocodeResult searchPlace(String keyword, String city);
+
     List<PlaceResult> searchNearby(
             double longitude,
             double latitude,

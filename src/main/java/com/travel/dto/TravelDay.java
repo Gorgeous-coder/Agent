@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class TravelDay {
     private int day;
-    private List<TravelPlace> places;
     private String weather;
+    private List<TravelPlace> places;
+    private List<TravelRouteSegment> routes;  // ⭐ 新增：景点间的路线
+    private String summary;                   // ⭐ 新增：当日总结
 }
